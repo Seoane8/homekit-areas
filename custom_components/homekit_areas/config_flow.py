@@ -108,10 +108,8 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         _LOGGER.debug("Found %d areas in registry", len(areas))
 
         area_options = [
-            selector.SelectOptionDict(
-                value=area.area_id, label=area.name or area.area_id
-            )
-            for area in sorted(areas, key=lambda a: a.name or a.area_id)
+            selector.SelectOptionDict(value=area.id, label=area.name or area.id)
+            for area in sorted(areas, key=lambda a: a.name or a.id)
         ]
 
         _LOGGER.debug("Area options: %s", area_options)
