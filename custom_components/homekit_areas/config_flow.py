@@ -6,7 +6,7 @@ from typing import Any
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.helpers import selector
+from homeassistant.helpers import area_registry, selector
 
 from .const import (
     AREA_MODE_ALL,
@@ -70,10 +70,10 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             area_mode = user_input.get(CONF_AREA_MODE, AREA_MODE_ALL)
             self._config[CONF_AREA_MODE] = area_mode
             if area_mode == AREA_MODE_SELECT:
-                self._config[CONF_AREAS] = user_input.get(CONF_AREAS, [])
+                return await self.async_step_select_areas()
             else:
                 self._config[CONF_AREAS] = []
-            return await self.async_step_port()
+                return await self.async_step_port()
 
         return self.async_show_form(
             step_id="user",
@@ -98,8 +98,8 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return await self.async_step_port()
 
         # Get all areas from Home Assistant
-        area_registry = self.hass.helpers.area_registry.async_get(self.hass)
-        areas = area_registry.async_list_areas()
+        area_reg = area_registry.async_get(self.hass)
+        areas = area_reg.async_list_areas()
         area_options = {area.area_id: area.name for area in areas}
 
         return self.async_show_form(

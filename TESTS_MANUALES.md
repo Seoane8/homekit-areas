@@ -131,15 +131,15 @@ Formato de cada test:
 
 ### Test 2.1 — Eliminar la entrada de Fase 1
 
-- [ ] **Paso 1:** En "Dispositivos y servicios", eliminar la entrada de "HomeKit Areas"
-- [ ] **Paso 2:** Confirmar la eliminación
-- [ ] **Resultado esperado:** La entrada se elimina
+- [x] **Paso 1:** En "Dispositivos y servicios", eliminar la entrada de "HomeKit Areas"
+- [x] **Paso 2:** Confirmar la eliminación
+- [x] **Resultado esperado:** La entrada se elimina
 
 ### Test 2.2 — Config Flow: selección de áreas
 
-- [ ] **Paso 1:** Añadir integración → "HomeKit Areas"
-- [ ] **Paso 2:** Verificar que se muestra un selector de áreas (Todas / Seleccionar)
-- [ ] **Paso 3:** Seleccionar "Seleccionar"
+- [x] **Paso 1:** Añadir integración → "HomeKit Areas"
+- [x] **Paso 2:** Verificar que se muestra un selector de áreas (Todas / Seleccionar)
+- [x] **Paso 3:** Seleccionar "Seleccionar"
 - [ ] **Paso 4:** Marcar algunas áreas (ej: Salón, Cocina)
 - [ ] **Paso 5:** Pulsar "Siguiente"
 - [ ] **Resultado esperado:** Se avanza al paso de puerto
