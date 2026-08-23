@@ -7,7 +7,7 @@ Estado del desarrollo fase por fase.
 | 0 | Investigación técnica HomeKit | ✅ Completado | — | Orquestador de `ConfigEntry`-s del dominio `homekit` vía `SOURCE_IMPORT`. Ver `docs/homekit-architecture.md` |
 | 1 | Esqueleto | ✅ Completado | — | Integración cargable: `manifest.json`, `__init__.py`, `const.py`, `config_flow.py`, `strings.json`, `translations/es.json`. Repo: `hacs.json`, `pyproject.toml`, CI, tests básicos. Ruff limpio. |
 | 2 | Config Flow | ✅ Completado | — | Flujo completo: áreas (todas/seleccionar), puerto, dominios, entidades excluidas. Tests actualizados. |
-| 3 | Options Flow | ⏳ Pendiente | — | |
+| 3 | Options Flow | ✅ Completado | — | Options Flow implementado: permite modificar áreas, puerto, dominios y exclusiones |
 | 4 | Modelo de datos | ⏳ Pendiente | — | |
 | 5 | Area Manager | ⏳ Pendiente | — | |
 | 6 | Entity Filter | ⏳ Pendiente | — | |
