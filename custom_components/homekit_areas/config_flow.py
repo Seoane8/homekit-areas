@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.helpers import area_registry, selector
+from homeassistant.helpers import area_registry as ar
+from homeassistant.helpers import selector
 
 from .const import (
     AREA_MODE_ALL,
@@ -20,6 +22,8 @@ from .const import (
     DEFAULT_INITIAL_PORT,
     DOMAIN,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 SUPPORTED_DOMAINS = [
     "light",
@@ -98,24 +102,29 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return await self.async_step_port()
 
         # Get all areas from Home Assistant
-        area_reg = area_registry.async_get(self.hass)
+        area_reg = ar.async_get(self.hass)
         areas = area_reg.async_list_areas()
-        area_options = {area.area_id: area.name for area in areas}
+
+        _LOGGER.debug("Found %d areas in registry", len(areas))
+
+        area_options = [
+            selector.SelectOptionDict(
+                value=area.area_id, label=area.name or area.area_id
+            )
+            for area in sorted(areas, key=lambda a: a.name or a.area_id)
+        ]
+
+        _LOGGER.debug("Area options: %s", area_options)
 
         return self.async_show_form(
             step_id="select_areas",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_AREAS, default=[]): selector.SelectSelector(
+                    vol.Required(CONF_AREAS): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(value=area_id, label=name)
-                                for area_id, name in sorted(
-                                    area_options.items(), key=lambda x: x[1]
-                                )
-                            ],
+                            options=area_options,
                             multiple=True,
-                            mode=selector.SelectSelectorMode.LIST,
+                            mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     ),
                 }
