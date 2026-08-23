@@ -1,0 +1,12 @@
+{
+  "domain": "homekit_areas",
+  "name": "HomeKit Areas",
+  "version": "0.1.0",
+  "documentation": "https://github.com/diegoseoane/homekit-areas",
+  "issue_tracker": "https://github.com/diegoseoane/homekit-areas/issues",
+  "codeowners": ["@diegoseoane"],
+  "config_flow": true,
+  "single_config_entry": true,
+  "iot_class": "local_polling",
+  "loggers": ["custom_components.homekit_areas"]
+}

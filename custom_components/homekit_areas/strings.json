@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "HomeKit Areas",
+        "description": "Create an independent HomeKit bridge for each Home Assistant area."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Only a single configuration of HomeKit Areas is allowed."
+    }
+  }
+}
