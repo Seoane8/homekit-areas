@@ -6,7 +6,7 @@ Estado del desarrollo fase por fase.
 |------|-------------|--------|--------|-------|
 | 0 | Investigación técnica HomeKit | ✅ Completado | — | Orquestador de `ConfigEntry`-s del dominio `homekit` vía `SOURCE_IMPORT`. Ver `docs/homekit-architecture.md` |
 | 1 | Esqueleto | ✅ Completado | — | Integración cargable: `manifest.json`, `__init__.py`, `const.py`, `config_flow.py`, `strings.json`, `translations/es.json`. Repo: `hacs.json`, `pyproject.toml`, CI, tests básicos. Ruff limpio. |
-| 2 | Config Flow | ⏳ Pendiente | — | |
+| 2 | Config Flow | ✅ Completado | — | Flujo completo: áreas (todas/seleccionar), puerto, dominios, entidades excluidas. Tests actualizados. |
 | 3 | Options Flow | ⏳ Pendiente | — | |
 | 4 | Modelo de datos | ⏳ Pendiente | — | |
 | 5 | Area Manager | ⏳ Pendiente | — | |
@@ -93,3 +93,21 @@ Infraestructura de repositorio:
 Validación local: `python -m compileall` OK, JSON OK, `ruff check` + `ruff format --check` limpios. La suite de pytest requiere instalar el stack de HA (se delega al CI).
 
 No se implementó HomeKit (cumple "Todavía no se implementará HomeKit").
+
+### 2026-08-21 — Fin Fase 2 (Config Flow)
+
+Implementado el flujo de configuración completo con 4 pasos:
+
+1. **user** — Selector de modo de áreas (Todas / Seleccionar)
+2. **select_areas** — Selector múltiple de áreas (solo si se elige "Seleccionar")
+3. **port** — Puerto inicial (default 21070, rango 1024-65535)
+4. **domains** — Selector múltiple de dominios (24 dominios soportados, defaults: light, switch, fan, cover)
+5. **excluded** — Selector de entidades excluidas (filtrado por dominios seleccionados)
+
+Archivos modificados:
+- `const.py` — Añadidas constantes `CONF_AREA_MODE`, `AREA_MODE_ALL`, `AREA_MODE_SELECT`
+- `config_flow.py` — Implementados los 4 pasos con selectores de HA
+- `strings.json` + `translations/es.json` — Textos para todos los pasos
+- `tests/test_config_flow.py` — Tests para flujo completo (all areas + select areas)
+
+Validación: ruff check + format limpios.

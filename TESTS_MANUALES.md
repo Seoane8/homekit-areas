@@ -46,82 +46,82 @@ Formato de cada test:
 
 ### Test 1.1 — Crear repositorio en GitHub
 
-- [ ] **Paso 1:** Ir a https://github.com/new
-- [ ] **Paso 2:** Crear un repositorio llamado `homekit-areas` (público o privado)
-- [ ] **Paso 3:** Copiar la URL del repositorio (ej: `https://github.com/diegoseoane/homekit-areas`)
-- [ ] **Resultado esperado:** El repositorio existe en GitHub
+- [x] **Paso 1:** Ir a https://github.com/new
+- [x] **Paso 2:** Crear un repositorio llamado `homekit-areas` (público o privado)
+- [x] **Paso 3:** Copiar la URL del repositorio (ej: `https://github.com/diegoseoane/homekit-areas`)
+- [x] **Resultado esperado:** El repositorio existe en GitHub
 
 ### Test 1.2 — Hacer push inicial
 
-- [ ] **Paso 1:** En terminal, añadir el remote:
+- [x] **Paso 1:** En terminal, añadir el remote:
   ```bash
   git remote add origin https://github.com/diegoseoane/homekit-areas
   ```
-- [ ] **Paso 2:** Hacer push:
+- [x] **Paso 2:** Hacer push:
   ```bash
   git push -u origin main
   ```
-- [ ] **Paso 3:** Verificar en GitHub que todos los archivos están en el repositorio
-- [ ] **Resultado esperado:** El código está en GitHub
+- [x] **Paso 3:** Verificar en GitHub que todos los archivos están en el repositorio
+- [x] **Resultado esperado:** El código está en GitHub
 
 ### Test 1.3 — Añadir repositorio a HACS
 
-- [ ] **Paso 1:** En Home Assistant, ir a HACS
-- [ ] **Paso 2:** Pulsar los tres puntos (arriba a la derecha) → "Repositorios personalizados"
-- [ ] **Paso 3:** Pegar la URL del repositorio (ej: `https://github.com/diegoseoane/homekit-areas`)
-- [ ] **Paso 4:** Seleccionar categoría: "Integración"
-- [ ] **Paso 5:** Pulsar "Añadir"
-- [ ] **Resultado esperado:** El repositorio aparece en la lista de personalizados
+- [x] **Paso 1:** En Home Assistant, ir a HACS
+- [x] **Paso 2:** Pulsar los tres puntos (arriba a la derecha) → "Repositorios personalizados"
+- [x] **Paso 3:** Pegar la URL del repositorio (ej: `https://github.com/diegoseoane/homekit-areas`)
+- [x] **Paso 4:** Seleccionar categoría: "Integración"
+- [x] **Paso 5:** Pulsar "Añadir"
+- [x] **Resultado esperado:** El repositorio aparece en la lista de personalizados
 
 ### Test 1.4 — Instalar desde HACS
 
-- [ ] **Paso 1:** En HACS, buscar "HomeKit Areas"
-- [ ] **Paso 2:** Pulsar sobre la integración
-- [ ] **Paso 3:** Pulsar "Descargar" (o "Install")
-- [ ] **Paso 4:** Seleccionar la última versión (o "main")
-- [ ] **Paso 5:** Reiniciar Home Assistant cuando se solicite
-- [ ] **Resultado esperado:** La integración se instala correctamente
+- [x] **Paso 1:** En HACS, buscar "HomeKit Areas"
+- [x] **Paso 2:** Pulsar sobre la integración
+- [x] **Paso 3:** Pulsar "Descargar" (o "Install")
+- [x] **Paso 4:** Seleccionar la última versión (o "main")
+- [x] **Paso 5:** Reiniciar Home Assistant cuando se solicite
+- [x] **Resultado esperado:** La integración se instala correctamente
 
 ### Test 1.5 — Verificar que la integración aparece
 
-- [ ] **Paso 1:** Ir a Ajustes → Dispositivos y servicios
-- [ ] **Paso 2:** Pulsar "Añadir integración" (botón abajo a la derecha)
-- [ ] **Paso 3:** Buscar "HomeKit Areas"
-- [ ] **Resultado esperado:** La integración "HomeKit Areas" aparece en la lista
+- [x] **Paso 1:** Ir a Ajustes → Dispositivos y servicios
+- [x] **Paso 2:** Pulsar "Añadir integración" (botón abajo a la derecha)
+- [x] **Paso 3:** Buscar "HomeKit Areas"
+- [x] **Resultado esperado:** La integración "HomeKit Areas" aparece en la lista
 
 ### Test 1.6 — Completar el Config Flow
 
-- [ ] **Paso 1:** Seleccionar "HomeKit Areas" de la lista
-- [ ] **Paso 2:** Verificar que se muestra un formulario con el título "HomeKit Areas"
-- [ ] **Paso 3:** Pulsar "Enviar" (sin rellenar nada, solo confirmación)
-- [ ] **Resultado esperado:** Se crea la entrada con título "HomeKit Areas"
+- [x] **Paso 1:** Seleccionar "HomeKit Areas" de la lista
+- [x] **Paso 2:** Verificar que se muestra un formulario con el título "HomeKit Areas"
+- [x] **Paso 3:** Pulsar "Enviar" (sin rellenar nada, solo confirmación)
+- [x] **Resultado esperado:** Se crea la entrada con título "HomeKit Areas"
 
 ### Test 1.7 — Verificar que la entrada se creó
 
-- [ ] **Paso 1:** En "Dispositivos y servicios", pestaña "Integraciones"
-- [ ] **Paso 2:** Buscar "HomeKit Areas"
-- [ ] **Paso 3:** Pulsar sobre la entrada
-- [ ] **Resultado esperado:** La entrada aparece con título "HomeKit Areas" y estado "Cargado"
+- [x] **Paso 1:** En "Dispositivos y servicios", pestaña "Integraciones"
+- [x] **Paso 2:** Buscar "HomeKit Areas"
+- [x] **Paso 3:** Pulsar sobre la entrada
+- [x] **Resultado esperado:** La entrada aparece con título "HomeKit Areas" y estado "Cargado"
 
 ### Test 1.8 — Verificar que solo se permite una instancia
 
-- [ ] **Paso 1:** Pulsar "Añadir integración" de nuevo
-- [ ] **Paso 2:** Buscar "HomeKit Areas"
-- [ ] **Paso 3:** Intentar añadir una segunda instancia
-- [ ] **Resultado esperado:** El flujo se aborta con el mensaje "Solo se permite una configuración de HomeKit Areas."
+- [x] **Paso 1:** Pulsar "Añadir integración" de nuevo
+- [x] **Paso 2:** Buscar "HomeKit Areas"
+- [x] **Paso 3:** Intentar añadir una segunda instancia
+- [x] **Resultado esperado:** El flujo se aborta con el mensaje "Solo se permite una configuración de HomeKit Areas."
 
 ### Test 1.9 — Recargar la integración
 
-- [ ] **Paso 1:** En la entrada de "HomeKit Areas", pulsar el menú (tres puntos)
-- [ ] **Paso 2:** Seleccionar "Recargar"
-- [ ] **Paso 3:** Verificar que la integración se recarga sin errores
-- [ ] **Resultado esperado:** La integración se recarga, no hay errores en el log
+- [x] **Paso 1:** En la entrada de "HomeKit Areas", pulsar el menú (tres puntos)
+- [x] **Paso 2:** Seleccionar "Recargar"
+- [x] **Paso 3:** Verificar que la integración se recarga sin errores
+- [x] **Resultado esperado:** La integración se recarga, no hay errores en el log
 
 ### Test 1.10 — Verificar logs
 
-- [ ] **Paso 1:** Revisar el log de Home Assistant (`/config/home-assistant.log`)
-- [ ] **Paso 2:** Buscar mensajes de `custom_components.homekit_areas`
-- [ ] **Resultado esperado:** Se ve el mensaje "HomeKit Areas entry loaded: HomeKit Areas" al cargar/recargar
+- [x] **Paso 1:** Revisar el log de Home Assistant (`/config/home-assistant.log`)
+- [x] **Paso 2:** Buscar mensajes de `custom_components.homekit_areas`
+- [x] **Resultado esperado:** Se ve el mensaje "HomeKit Areas entry loaded: HomeKit Areas" al cargar/recargar
 
 ---
 

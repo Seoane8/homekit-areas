@@ -3,7 +3,41 @@
     "step": {
       "user": {
         "title": "HomeKit Areas",
-        "description": "Create an independent HomeKit bridge for each Home Assistant area."
+        "description": "Create an independent HomeKit bridge for each Home Assistant area.",
+        "data": {
+          "area_mode": "Areas to manage"
+        },
+        "data_description": {
+          "area_mode": "Choose whether to manage all areas or only specific ones"
+        }
+      },
+      "select_areas": {
+        "title": "Select areas",
+        "description": "Select the areas you want to manage.",
+        "data": {
+          "areas": "Areas"
+        }
+      },
+      "port": {
+        "title": "Initial port",
+        "description": "Initial port for HomeKit bridges. Each area will use a consecutive port starting from this one.",
+        "data": {
+          "initial_port": "Initial port"
+        }
+      },
+      "domains": {
+        "title": "Domains",
+        "description": "Select the entity domains you want to include in the bridges.",
+        "data": {
+          "domains": "Domains"
+        }
+      },
+      "excluded": {
+        "title": "Excluded entities",
+        "description": "Select the entities you want to exclude from the bridges.",
+        "data": {
+          "excluded_entities": "Excluded entities"
+        }
       }
     },
     "abort": {

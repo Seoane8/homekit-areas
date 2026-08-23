@@ -11,6 +11,10 @@ VERSION = "0.1.0"
 
 # List of area ids managed by this entry. An empty list means "all areas".
 CONF_AREAS = "areas"
+# Mode for area selection: "all" or "select"
+CONF_AREA_MODE = "area_mode"
+AREA_MODE_ALL = "all"
+AREA_MODE_SELECT = "select"
 # Starting port for the per-area HomeKit bridges.
 CONF_INITIAL_PORT = "initial_port"
 # Domains allowed on the bridges.
