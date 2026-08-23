@@ -150,6 +150,19 @@ Formato de cada test:
 
 ---
 
+## Fase 4 — Modelo de datos
+
+> Verificar que el modelo de datos representa correctamente los bridges.
+
+### Test 4.1 — Verificar estructura del modelo
+
+- [ ] **Paso 1:** Revisar `custom_components/homekit_areas/models.py`
+- [ ] **Paso 2:** Verificar que existe una clase `AreaBridge`
+- [ ] **Paso 3:** Verificar que tiene campos: `area_id`, `name`, `port`, `entities`
+- [ ] **Resultado esperado:** El modelo está definido correctamente
+
+---
+
 ## Fase 5 — Area Manager
 
 > Verificar que se descubren las áreas de Home Assistant correctamente.
@@ -437,6 +450,7 @@ Formato de cada test:
 | 1 | 7 | 7/7 |
 | 2 | 6 | 6/6 |
 | 3 | 5 | 5/5 |
+| 4 | 1 | 0/1 |
 | 5 | 4 | 0/4 |
 | 6 | 3 | 0/3 |
 | 7 | 2 | 0/2 |
@@ -451,4 +465,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **48** | **18/48** |
+| **Total** | **49** | **18/49** |

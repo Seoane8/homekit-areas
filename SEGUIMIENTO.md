@@ -8,7 +8,7 @@ Estado del desarrollo fase por fase.
 | 1 | Esqueleto | ✅ Completado | — | Integración cargable: `manifest.json`, `__init__.py`, `const.py`, `config_flow.py`, `strings.json`, `translations/es.json`. Repo: `hacs.json`, `pyproject.toml`, CI, tests básicos. Ruff limpio. |
 | 2 | Config Flow | ✅ Completado | — | Flujo completo: áreas (todas/seleccionar), puerto, dominios, entidades excluidas. Tests actualizados. |
 | 3 | Options Flow | ✅ Completado | — | Options Flow implementado: permite modificar áreas, puerto, dominios y exclusiones |
-| 4 | Modelo de datos | ⏳ Pendiente | — | |
+| 4 | Modelo de datos | ✅ Completado | — | `models.py` con `AreaBridge` (area_id, name, port, entities). Identidad por `area_id`. |
 | 5 | Area Manager | ⏳ Pendiente | — | |
 | 6 | Entity Filter | ⏳ Pendiente | — | |
 | 7 | Bridge Manager | ⏳ Pendiente | — | |
@@ -135,3 +135,22 @@ Implementado el flujo de opciones para modificar la configuración después de l
   - ✅ Modificar entidades excluidas
 
 **Nota:** Durante las pruebas manuales se detectó y corrigió un bug: el selector de áreas no se mostraba correctamente. Se ajustó el flujo para que `async_step_user` llame a `async_step_select_areas` cuando se selecciona el modo "Seleccionar".
+
+### 2026-08-23 — Fin Fase 4 (Modelo de datos)
+
+Implementado el modelo de datos para representar los bridges de HomeKit por área.
+
+**Archivos creados:**
+- `models.py` — Clase `AreaBridge` con campos:
+  - `area_id: str` — Identificador único del área (identidad del bridge)
+  - `name: str` — Nombre del bridge (ej: "HomeKit Salón")
+  - `port: int` — Puerto asignado al bridge
+  - `entities: set[str]` — Conjunto de entity_ids incluidas en el bridge
+
+**Diseño:**
+- La identidad del bridge es siempre `area_id`, nunca el nombre (plan §10)
+- `__hash__` y `__eq__` basados en `area_id` para usar en sets/dicts
+- `entities` como `set[str]` para operaciones eficientes de unión/diferencia
+
+**Validación:**
+- Ruff check + format limpios
