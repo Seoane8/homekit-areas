@@ -8,6 +8,148 @@ Formato de cada test:
 
 ---
 
+## Fase 1 — Esqueleto
+
+> Verificar que la integración aparece en Home Assistant, se instala, abre Config Flow, crea una Config Entry, se recarga correctamente.
+
+### Test 1.1 — Añadir repositorio a HACS
+
+- [x] **Paso 1:** En Home Assistant, ir a HACS
+- [x] **Paso 2:** Pulsar los tres puntos (arriba a la derecha) → "Repositorios personalizados"
+- [x] **Paso 3:** Pegar la URL del repositorio (`https://github.com/Seoane8/homekit-areas`)
+- [x] **Paso 4:** Seleccionar categoría: "Integración"
+- [x] **Paso 5:** Pulsar "Añadir"
+- [x] **Resultado esperado:** El repositorio aparece en la lista de personalizados
+
+### Test 1.2 — Instalar desde HACS
+
+- [x] **Paso 1:** En HACS, buscar "HomeKit Areas"
+- [x] **Paso 2:** Pulsar sobre la integración
+- [x] **Paso 3:** Pulsar "Descargar"
+- [x] **Paso 4:** Reiniciar Home Assistant cuando se solicite
+- [x] **Resultado esperado:** La integración se instala correctamente
+
+### Test 1.3 — Verificar que la integración aparece
+
+- [x] **Paso 1:** Ir a Ajustes → Dispositivos y servicios
+- [x] **Paso 2:** Pulsar "Añadir integración"
+- [x] **Paso 3:** Buscar "HomeKit Areas"
+- [x] **Resultado esperado:** La integración "HomeKit Areas" aparece en la lista
+
+### Test 1.4 — Completar el Config Flow (Fase 1)
+
+- [x] **Paso 1:** Seleccionar "HomeKit Areas" de la lista
+- [x] **Paso 2:** Verificar que se muestra un formulario
+- [x] **Paso 3:** Pulsar "Enviar"
+- [x] **Resultado esperado:** Se crea la entrada con título "HomeKit Areas"
+
+### Test 1.5 — Verificar que la entrada se creó
+
+- [x] **Paso 1:** En "Dispositivos y servicios", pestaña "Integraciones"
+- [x] **Paso 2:** Buscar "HomeKit Areas"
+- [x] **Resultado esperado:** La entrada aparece con título "HomeKit Areas" y estado "Cargado"
+
+### Test 1.6 — Verificar que solo se permite una instancia
+
+- [x] **Paso 1:** Pulsar "Añadir integración" de nuevo
+- [x] **Paso 2:** Buscar "HomeKit Areas"
+- [x] **Paso 3:** Intentar añadir una segunda instancia
+- [x] **Resultado esperado:** El flujo se aborta con el mensaje "Solo se permite una configuración de HomeKit Areas."
+
+### Test 1.7 — Recargar la integración
+
+- [x] **Paso 1:** En la entrada de "HomeKit Areas", pulsar el menú (tres puntos)
+- [x] **Paso 2:** Seleccionar "Recargar"
+- [x] **Resultado esperado:** La integración se recarga, no hay errores en el log
+
+---
+
+## Fase 2 — Config Flow
+
+> Verificar el flujo completo de configuración (áreas, puerto, dominios, entidades excluidas).
+
+### Test 2.1 — Eliminar la entrada de Fase 1
+
+- [x] **Paso 1:** En "Dispositivos y servicios", eliminar la entrada de "HomeKit Areas"
+- [x] **Paso 2:** Confirmar la eliminación
+- [x] **Resultado esperado:** La entrada se elimina
+
+### Test 2.2 — Config Flow: selección de áreas
+
+- [x] **Paso 1:** Añadir integración → "HomeKit Areas"
+- [x] **Paso 2:** Verificar que se muestra un selector de áreas (Todas / Seleccionar)
+- [x] **Paso 3:** Seleccionar "Seleccionar"
+- [x] **Paso 4:** Verificar que se muestra el selector de áreas
+- [x] **Paso 5:** Marcar algunas áreas (ej: Salón, Cocina)
+- [x] **Paso 6:** Pulsar "Siguiente"
+- [x] **Resultado esperado:** Se avanza al paso de puerto
+
+### Test 2.3 — Config Flow: puerto inicial
+
+- [x] **Paso 1:** Verificar que se muestra un campo "Puerto inicial" con valor por defecto `21070`
+- [x] **Paso 2:** Pulsar "Siguiente"
+- [x] **Resultado esperado:** Se avanza al paso de dominios
+
+### Test 2.4 — Config Flow: dominios
+
+- [x] **Paso 1:** Verificar que se muestra un selector múltiple de dominios
+- [x] **Paso 2:** Verificar que los dominios por defecto están marcados (light, switch, fan, cover)
+- [x] **Paso 3:** Pulsar "Siguiente"
+- [x] **Resultado esperado:** Se avanza al paso de entidades excluidas
+
+### Test 2.5 — Config Flow: entidades excluidas
+
+- [x] **Paso 1:** Verificar que se muestra un selector de entidades
+- [x] **Paso 2:** Pulsar "Enviar"
+- [x] **Resultado esperado:** Se crea la entrada con la configuración
+
+### Test 2.6 — Verificar que la configuración se guardó
+
+- [x] **Paso 1:** En la entrada de "HomeKit Areas", pulsar "Configurar"
+- [x] **Paso 2:** Verificar que se muestran las opciones guardadas
+- [x] **Resultado esperado:** Las opciones coinciden con lo configurado
+
+---
+
+## Fase 3 — Options Flow
+
+> Verificar que se pueden modificar las opciones después de la configuración inicial.
+
+### Test 3.1 — Verificar que existe la opción "Configurar"
+
+- [x] **Paso 1:** En la entrada de "HomeKit Areas", verificar que aparece el botón "Configurar"
+- [x] **Resultado esperado:** El botón "Configurar" está disponible
+
+### Test 3.2 — Modificar áreas
+
+- [x] **Paso 1:** Pulsar "Configurar"
+- [x] **Paso 2:** Cambiar la selección de áreas (añadir/quitar alguna)
+- [x] **Paso 3:** Pulsar "Guardar"
+- [x] **Resultado esperado:** Las opciones se actualizan
+
+### Test 3.3 — Modificar puerto inicial
+
+- [x] **Paso 1:** Pulsar "Configurar"
+- [x] **Paso 2:** Cambiar el puerto inicial
+- [x] **Paso 3:** Pulsar "Guardar"
+- [x] **Resultado esperado:** El puerto se actualiza
+
+### Test 3.4 — Modificar dominios
+
+- [x] **Paso 1:** Pulsar "Configurar"
+- [x] **Paso 2:** Cambiar los dominios seleccionados
+- [x] **Paso 3:** Pulsar "Guardar"
+- [x] **Resultado esperado:** Los dominios se actualizan
+
+### Test 3.5 — Modificar entidades excluidas
+
+- [x] **Paso 1:** Pulsar "Configurar"
+- [x] **Paso 2:** Cambiar las entidades excluidas
+- [x] **Paso 3:** Pulsar "Guardar"
+- [x] **Resultado esperado:** Las exclusiones se actualizan
+
+---
+
 ## Fase 5 — Area Manager
 
 > Verificar que se descubren las áreas de Home Assistant correctamente.
@@ -271,12 +413,11 @@ Formato de cada test:
 - [ ] **Paso 3:** Verificar que todos los tests pasan
 - [ ] **Resultado esperado:** CI verde
 
-### Test 18.2 — Instalación vía HACS
+### Test 18.2 — Instalación vía HACS (nueva versión)
 
-- [ ] **Paso 1:** Añadir el repositorio a HACS
-- [ ] **Paso 2:** Instalar la integración desde HACS
-- [ ] **Paso 3:** Reiniciar HA
-- [ ] **Resultado esperado:** La integración se instala y funciona
+- [ ] **Paso 1:** Actualizar la integración desde HACS
+- [ ] **Paso 2:** Reiniciar HA
+- [ ] **Resultado esperado:** La integración se actualiza y funciona
 
 ### Test 18.3 — Criterios de aceptación v1.0.0
 
@@ -293,6 +434,9 @@ Formato de cada test:
 
 | Fase | Tests | Completados |
 |------|-------|-------------|
+| 1 | 7 | 7/7 |
+| 2 | 6 | 6/6 |
+| 3 | 5 | 5/5 |
 | 5 | 4 | 0/4 |
 | 6 | 3 | 0/3 |
 | 7 | 2 | 0/2 |
@@ -307,4 +451,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **30** | **0/30** |
+| **Total** | **48** | **18/48** |
