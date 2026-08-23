@@ -9,7 +9,7 @@ Estado del desarrollo fase por fase.
 | 2 | Config Flow | ✅ Completado | — | Flujo completo: áreas (todas/seleccionar), puerto, dominios, entidades excluidas. Tests actualizados. |
 | 3 | Options Flow | ✅ Completado | — | Options Flow implementado: permite modificar áreas, puerto, dominios y exclusiones |
 | 4 | Modelo de datos | ✅ Completado | — | `models.py` con `AreaBridge` (area_id, name, port, entities). Identidad por `area_id`. |
-| 5 | Area Manager | ⏳ Pendiente | — | |
+| 5 | Area Manager | ✅ Completado | — | `area_manager.py` con descubrimiento de áreas, detección de cambios y obtención de entidades |
 | 6 | Entity Filter | ⏳ Pendiente | — | |
 | 7 | Bridge Manager | ⏳ Pendiente | — | |
 | 8 | Persistencia de puertos | ⏳ Pendiente | — | |
@@ -151,6 +151,29 @@ Implementado el modelo de datos para representar los bridges de HomeKit por áre
 - La identidad del bridge es siempre `area_id`, nunca el nombre (plan §10)
 - `__hash__` y `__eq__` basados en `area_id` para usar en sets/dicts
 - `entities` como `set[str]` para operaciones eficientes de unión/diferencia
+
+**Validación:**
+- Ruff check + format limpios
+
+### 2026-08-23 — Fin Fase 5 (Area Manager)
+
+Implementado el AreaManager para descubrir y rastrear áreas de Home Assistant.
+
+**Archivos creados:**
+- `area_manager.py` — Clase `AreaManager` con responsabilidades:
+  - `async_setup()` — Inicializa el manager y escucha cambios en el registro de áreas
+  - `async_discover_areas()` — Descubre todas las áreas y retorna `AreaBridge` objects
+  - `async_get_entities_for_area(area_id)` — Obtiene entidades asociadas a un área (directamente o vía dispositivo)
+  - `_async_handle_area_registry_update()` — Detecta creación, eliminación y renombrado de áreas
+  - `get_known_areas()` — Retorna áreas conocidas (area_id → name)
+  - `async_shutdown()` — Limpia listeners
+
+**Diseño:**
+- Usa `area_registry`, `entity_registry`, `device_registry` de HA
+- Escucha evento `area_registry_updated` para detectar cambios en tiempo real
+- Las entidades se asocian a un área si:
+  - La entidad tiene `area_id` directamente, O
+  - El dispositivo de la entidad tiene `area_id`
 
 **Validación:**
 - Ruff check + format limpios

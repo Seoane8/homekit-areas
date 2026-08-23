@@ -156,10 +156,10 @@ Formato de cada test:
 
 ### Test 4.1 — Verificar estructura del modelo
 
-- [ ] **Paso 1:** Revisar `custom_components/homekit_areas/models.py`
-- [ ] **Paso 2:** Verificar que existe una clase `AreaBridge`
-- [ ] **Paso 3:** Verificar que tiene campos: `area_id`, `name`, `port`, `entities`
-- [ ] **Resultado esperado:** El modelo está definido correctamente
+- [x] **Paso 1:** Revisar `custom_components/homekit_areas/models.py`
+- [x] **Paso 2:** Verificar que existe una clase `AreaBridge`
+- [x] **Paso 3:** Verificar que tiene campos: `area_id`, `name`, `port`, `entities`
+- [x] **Resultado esperado:** El modelo está definido correctamente
 
 ---
 
@@ -450,7 +450,7 @@ Formato de cada test:
 | 1 | 7 | 7/7 |
 | 2 | 6 | 6/6 |
 | 3 | 5 | 5/5 |
-| 4 | 1 | 0/1 |
+| 4 | 1 | 1/1 |
 | 5 | 4 | 0/4 |
 | 6 | 3 | 0/3 |
 | 7 | 2 | 0/2 |
@@ -465,4 +465,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **49** | **18/49** |
+| **Total** | **49** | **19/49** |
