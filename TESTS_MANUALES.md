@@ -140,31 +140,31 @@ Formato de cada test:
 - [x] **Paso 1:** Añadir integración → "HomeKit Areas"
 - [x] **Paso 2:** Verificar que se muestra un selector de áreas (Todas / Seleccionar)
 - [x] **Paso 3:** Seleccionar "Seleccionar"
-- [ ] **Paso 4:** Marcar algunas áreas (ej: Salón, Cocina)
-- [ ] **Paso 5:** Pulsar "Siguiente"
-- [ ] **Resultado esperado:** Se avanza al paso de puerto
+- [x] **Paso 4:** Marcar algunas áreas (ej: Salón, Cocina)
+- [x] **Paso 5:** Pulsar "Siguiente"
+- [x] **Resultado esperado:** Se avanza al paso de puerto
 
 ### Test 2.3 — Config Flow: puerto inicial
 
-- [ ] **Paso 1:** Verificar que se muestra un campo "Puerto inicial" con valor por defecto `21070`
-- [ ] **Paso 2:** Cambiar el puerto a `21080`
-- [ ] **Paso 3:** Pulsar "Siguiente"
-- [ ] **Resultado esperado:** Se avanza al paso de dominios
+- [x] **Paso 1:** Verificar que se muestra un campo "Puerto inicial" con valor por defecto `21070`
+- [x] **Paso 2:** Cambiar el puerto a `21080`
+- [x] **Paso 3:** Pulsar "Siguiente"
+- [x] **Resultado esperado:** Se avanza al paso de dominios
 
 ### Test 2.4 — Config Flow: dominios
 
-- [ ] **Paso 1:** Verificar que se muestra un selector múltiple de dominios
-- [ ] **Paso 2:** Verificar que los dominios por defecto están marcados (light, switch, fan, cover)
-- [ ] **Paso 3:** Desmarcar `switch`, marcar `climate`
-- [ ] **Paso 4:** Pulsar "Siguiente"
-- [ ] **Resultado esperado:** Se avanza al paso de entidades excluidas
+- [x] **Paso 1:** Verificar que se muestra un selector múltiple de dominios
+- [x] **Paso 2:** Verificar que los dominios por defecto están marcados (light, switch, fan, cover)
+- [x] **Paso 3:** Desmarcar `switch`, marcar `climate`
+- [x] **Paso 4:** Pulsar "Siguiente"
+- [x] **Resultado esperado:** Se avanza al paso de entidades excluidas
 
 ### Test 2.5 — Config Flow: entidades excluidas
 
-- [ ] **Paso 1:** Verificar que se muestra un selector de entidades
-- [ ] **Paso 2:** Seleccionar algunas entidades para excluir
-- [ ] **Paso 3:** Pulsar "Enviar"
-- [ ] **Resultado esperado:** Se crea la entrada con la configuración
+- [x] **Paso 1:** Verificar que se muestra un selector de entidades
+- [x] **Paso 2:** Seleccionar algunas entidades para excluir
+- [x] **Paso 3:** Pulsar "Enviar"
+- [x] **Resultado esperado:** Se crea la entrada con la configuración
 
 ### Test 2.6 — Verificar que la configuración se guardó
 

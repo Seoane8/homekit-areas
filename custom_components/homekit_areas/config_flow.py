@@ -59,6 +59,13 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
     MINOR_VERSION = 1
 
+    @staticmethod
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> HomeKitAreasOptionsFlow:
+        """Get the options flow for this handler."""
+        return HomeKitAreasOptionsFlow(config_entry)
+
     def __init__(self) -> None:
         """Initialize the config flow."""
         self._config: dict[str, Any] = {}
@@ -204,6 +211,180 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         selector.EntitySelector(
                             selector.EntitySelectorConfig(
                                 domain=self._config.get(CONF_DOMAINS, []),
+                                multiple=True,
+                            )
+                        )
+                    ),
+                }
+            ),
+        )
+
+
+class HomeKitAreasOptionsFlow(config_entries.OptionsFlow):
+    """Handle options flow for HomeKit Areas."""
+
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        """Initialize options flow."""
+        self._config_entry = config_entry
+        self._config: dict[str, Any] = {}
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Handle the area selection step."""
+        if user_input is not None:
+            area_mode = user_input.get(CONF_AREA_MODE, AREA_MODE_ALL)
+            self._config[CONF_AREA_MODE] = area_mode
+            if area_mode == AREA_MODE_SELECT:
+                return await self.async_step_select_areas()
+            else:
+                self._config[CONF_AREAS] = []
+                return await self.async_step_port()
+
+        current_area_mode = self._config_entry.options.get(
+            CONF_AREA_MODE, AREA_MODE_ALL
+        )
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_AREA_MODE, default=current_area_mode): vol.In(
+                        {
+                            AREA_MODE_ALL: "Todas las áreas",
+                            AREA_MODE_SELECT: "Seleccionar áreas",
+                        }
+                    ),
+                }
+            ),
+        )
+
+    async def async_step_select_areas(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Handle the area selection step when 'select' mode is chosen."""
+        if user_input is not None:
+            self._config[CONF_AREAS] = user_input.get(CONF_AREAS, [])
+            return await self.async_step_port()
+
+        # Get all areas from Home Assistant
+        area_reg = ar.async_get(self.hass)
+        areas = area_reg.async_list_areas()
+
+        _LOGGER.debug("Found %d areas in registry", len(areas))
+
+        current_areas = self._config_entry.options.get(CONF_AREAS, [])
+
+        area_options = [
+            selector.SelectOptionDict(value=area.id, label=area.name or area.id)
+            for area in sorted(areas, key=lambda a: a.name or a.id)
+        ]
+
+        _LOGGER.debug("Area options: %s", area_options)
+
+        return self.async_show_form(
+            step_id="select_areas",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_AREAS, default=current_areas): (
+                        selector.SelectSelector(
+                            selector.SelectSelectorConfig(
+                                options=area_options,
+                                multiple=True,
+                                mode=selector.SelectSelectorMode.DROPDOWN,
+                            )
+                        )
+                    ),
+                }
+            ),
+        )
+
+    async def async_step_port(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Handle the port configuration step."""
+        if user_input is not None:
+            self._config[CONF_INITIAL_PORT] = user_input[CONF_INITIAL_PORT]
+            return await self.async_step_domains()
+
+        current_port = self._config_entry.options.get(
+            CONF_INITIAL_PORT, DEFAULT_INITIAL_PORT
+        )
+
+        return self.async_show_form(
+            step_id="port",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_INITIAL_PORT, default=current_port): (
+                        selector.NumberSelector(
+                            selector.NumberSelectorConfig(
+                                min=1024,
+                                max=65535,
+                                mode=selector.NumberSelectorMode.BOX,
+                            )
+                        )
+                    ),
+                }
+            ),
+        )
+
+    async def async_step_domains(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Handle the domain selection step."""
+        if user_input is not None:
+            self._config[CONF_DOMAINS] = user_input.get(CONF_DOMAINS, [])
+            return await self.async_step_excluded()
+
+        current_domains = self._config_entry.options.get(
+            CONF_DOMAINS, list(DEFAULT_DOMAINS)
+        )
+
+        return self.async_show_form(
+            step_id="domains",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_DOMAINS, default=current_domains): (
+                        selector.SelectSelector(
+                            selector.SelectSelectorConfig(
+                                options=[
+                                    selector.SelectOptionDict(
+                                        value=domain, label=domain
+                                    )
+                                    for domain in SUPPORTED_DOMAINS
+                                ],
+                                multiple=True,
+                                mode=selector.SelectSelectorMode.DROPDOWN,
+                            )
+                        )
+                    ),
+                }
+            ),
+        )
+
+    async def async_step_excluded(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Handle the excluded entities step."""
+        if user_input is not None:
+            self._config[CONF_EXCLUDED_ENTITIES] = user_input.get(
+                CONF_EXCLUDED_ENTITIES, []
+            )
+            return self.async_create_entry(title="", data=self._config)
+
+        current_excluded = self._config_entry.options.get(CONF_EXCLUDED_ENTITIES, [])
+        current_domains = self._config.get(
+            CONF_DOMAINS, self._config_entry.options.get(CONF_DOMAINS, [])
+        )
+
+        return self.async_show_form(
+            step_id="excluded",
+            data_schema=vol.Schema(
+                {
+                    vol.Optional(CONF_EXCLUDED_ENTITIES, default=current_excluded): (
+                        selector.EntitySelector(
+                            selector.EntitySelectorConfig(
+                                domain=current_domains,
                                 multiple=True,
                             )
                         )
