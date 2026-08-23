@@ -111,3 +111,27 @@ Archivos modificados:
 - `tests/test_config_flow.py` — Tests para flujo completo (all areas + select areas)
 
 Validación: ruff check + format limpios.
+
+### 2026-08-21 — Fin Fase 3 (Options Flow)
+
+Implementado el flujo de opciones para modificar la configuración después de la instalación inicial.
+
+**Archivos modificados:**
+- `config_flow.py` — Añadida clase `HomeKitAreasOptionsFlow` con los mismos 5 pasos que el Config Flow:
+  1. **init** — Selector de modo de áreas (Todas / Seleccionar)
+  2. **select_areas** — Selector múltiple de áreas (precargado con valores actuales)
+  3. **port** — Puerto inicial (precargado con valor actual)
+  4. **domains** — Selector múltiple de dominios (precargado con valores actuales)
+  5. **excluded** — Selector de entidades excluidas (precargado con valores actuales)
+- `strings.json` + `translations/es.json` — Añadida sección `options` con textos para todos los pasos
+
+**Validación:**
+- Ruff check + format limpios
+- Tests manuales completados (5/5):
+  - ✅ Verificar que existe la opción "Configurar"
+  - ✅ Modificar áreas
+  - ✅ Modificar puerto inicial
+  - ✅ Modificar dominios
+  - ✅ Modificar entidades excluidas
+
+**Nota:** Durante las pruebas manuales se detectó y corrigió un bug: el selector de áreas no se mostraba correctamente. Se ajustó el flujo para que `async_step_user` llame a `async_step_select_areas` cuando se selecciona el modo "Seleccionar".
