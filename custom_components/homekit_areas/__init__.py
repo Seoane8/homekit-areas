@@ -111,21 +111,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             port_manager._saved_initial_port,
             initial_port,
         )
-        # Remove ALL existing bridges first (they have old ports)
+        # Remove all existing bridges first
         existing_bridges = bridge_manager.get_all_bridges()
+        _LOGGER.info("Found %d existing bridges to remove", len(existing_bridges))
         for area_id in list(existing_bridges.keys()):
             _LOGGER.info(
                 "Removing bridge for area %s (port changed)",
                 area_id,
             )
             await bridge_manager.remove_bridge(area_id)
-
-        # Wait for all bridges to be fully removed
-        await asyncio.sleep(1.0)
-
-        # Reset port mappings after removing bridges
+        
+        _LOGGER.info("All existing bridges removed, resetting ports")
+        # Reset port mappings
         port_manager.reset_all_ports(initial_port)
         await port_manager.async_save()
+        _LOGGER.info("Ports reset complete, next port: %d", port_manager._next_port)
     else:
         # Port didn't change, preserve existing bridges
         _LOGGER.debug("Initial port unchanged, preserving existing bridges")
