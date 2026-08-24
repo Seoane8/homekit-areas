@@ -58,11 +58,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     port_manager = PortManager(hass, initial_port)
     await port_manager.async_load()
 
+    # Check if initial port changed (port_manager will have reset mappings)
+    # If so, we need to cleanup existing bridges before creating new ones
+    port_changed = (
+        port_manager._saved_initial_port is not None
+        and port_manager._saved_initial_port != initial_port
+    )
+
     # Initialize BridgeManager with PortManager
     bridge_manager = BridgeManager(hass, port_manager)
 
-    # Clean up any stale bridges from previous attempts
+    # Clean up any stale bridges from previous attempts or port changes
     await bridge_manager.cleanup_stale_bridges()
+
+    # If port changed, save the reset state
+    if port_changed:
+        await port_manager.async_save()
 
     # Store in hass.data for access by other components
     hass.data.setdefault(DOMAIN, {})

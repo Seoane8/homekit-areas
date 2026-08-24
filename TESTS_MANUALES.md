@@ -242,9 +242,9 @@ Formato de cada test:
 
 ### Test 8.1 — Asignación de puertos
 
-- [ ] **Paso 1:** Configurar puerto inicial `21070`
-- [ ] **Paso 2:** Verificar en los logs que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
-- [ ] **Resultado esperado:** Los puertos se asignan correctamente
+- [x] **Paso 1:** Configurar puerto inicial `21070`
+- [x] **Paso 2:** Verificar en los logs que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
+- [x] **Resultado esperado:** Los puertos se asignan correctamente
 
 ### Test 8.2 — Persistencia tras reinicio
 

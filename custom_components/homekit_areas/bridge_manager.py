@@ -79,6 +79,9 @@ class BridgeManager:
                 entry.data.get(CONF_NAME),
                 entry.entry_id,
             )
+            # First unload to stop the bridge
+            await self.hass.config_entries.async_unload(entry.entry_id)
+            # Then remove the entry
             await self.hass.config_entries.async_remove(entry.entry_id)
 
         _LOGGER.info("Cleaned up %d stale bridges", len(entries_to_remove))

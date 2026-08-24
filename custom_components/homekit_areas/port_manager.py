@@ -43,6 +43,8 @@ class PortManager:
         self._port_mapping: dict[str, int] = {}
         # Track next available port
         self._next_port = initial_port
+        # Track the initial port that was used when mapping was created
+        self._saved_initial_port: int | None = None
 
     async def async_load(self) -> None:
         """Load port mapping from storage."""
@@ -50,21 +52,36 @@ class PortManager:
         if data:
             self._port_mapping = data.get("port_mapping", {})
             self._next_port = data.get("next_port", self._initial_port)
+            self._saved_initial_port = data.get("saved_initial_port")
             _LOGGER.info(
-                "Loaded port mapping: %d areas, next port: %d",
+                "Loaded port mapping: %d areas, next port: %d, saved initial port: %s",
                 len(self._port_mapping),
                 self._next_port,
+                self._saved_initial_port,
             )
+            # Check if initial port has changed
+            if (
+                self._saved_initial_port is not None
+                and self._saved_initial_port != self._initial_port
+            ):
+                _LOGGER.info(
+                    "Initial port changed from %d to %d, resetting all ports",
+                    self._saved_initial_port,
+                    self._initial_port,
+                )
+                self.reset_all_ports(self._initial_port)
         else:
             _LOGGER.info("No existing port mapping found, starting fresh")
             self._port_mapping = {}
             self._next_port = self._initial_port
+            self._saved_initial_port = self._initial_port
 
     async def async_save(self) -> None:
         """Save port mapping to storage."""
         data = {
             "port_mapping": self._port_mapping,
             "next_port": self._next_port,
+            "saved_initial_port": self._initial_port,
         }
         await self._store.async_save(data)
         _LOGGER.debug("Saved port mapping: %d areas", len(self._port_mapping))
@@ -143,3 +160,22 @@ class PortManager:
             True if the area has a port, False otherwise
         """
         return area_id in self._port_mapping
+
+    def reset_all_ports(self, new_initial_port: int) -> None:
+        """Reset all port mappings and start from a new initial port.
+
+        This clears all existing mappings and resets the next port counter.
+        Used when the user changes the initial port in configuration.
+
+        Args:
+            new_initial_port: The new starting port
+        """
+        _LOGGER.info(
+            "Resetting all ports. Old mapping: %s, new initial port: %d",
+            self._port_mapping,
+            new_initial_port,
+        )
+        self._port_mapping = {}
+        self._next_port = new_initial_port
+        self._saved_initial_port = new_initial_port
+        self._initial_port = new_initial_port

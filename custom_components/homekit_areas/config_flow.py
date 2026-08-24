@@ -141,7 +141,8 @@ class HomeKitAreasConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> config_entries.ConfigFlowResult:
         """Handle the port configuration step."""
         if user_input is not None:
-            self._config[CONF_INITIAL_PORT] = user_input[CONF_INITIAL_PORT]
+            # Convert to int (NumberSelector returns float)
+            self._config[CONF_INITIAL_PORT] = int(user_input[CONF_INITIAL_PORT])
             return await self.async_step_domains()
 
         return self.async_show_form(
@@ -304,7 +305,8 @@ class HomeKitAreasOptionsFlow(config_entries.OptionsFlow):
     ) -> config_entries.ConfigFlowResult:
         """Handle the port configuration step."""
         if user_input is not None:
-            self._config[CONF_INITIAL_PORT] = user_input[CONF_INITIAL_PORT]
+            # Convert to int (NumberSelector returns float)
+            self._config[CONF_INITIAL_PORT] = int(user_input[CONF_INITIAL_PORT])
             return await self.async_step_domains()
 
         current_port = self._config_entry.options.get(
