@@ -59,17 +59,16 @@ class PortManager:
                 self._next_port,
                 self._saved_initial_port,
             )
-            # Check if initial port has changed
+            # Check if initial port has changed (but don't reset yet)
             if (
                 self._saved_initial_port is not None
                 and self._saved_initial_port != self._initial_port
             ):
                 _LOGGER.info(
-                    "Initial port changed from %d to %d, resetting all ports",
+                    "Initial port changed from %d to %d (reset will be handled by caller)",
                     self._saved_initial_port,
                     self._initial_port,
                 )
-                self.reset_all_ports(self._initial_port)
         else:
             _LOGGER.info("No existing port mapping found, starting fresh")
             self._port_mapping = {}
