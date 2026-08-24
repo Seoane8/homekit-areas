@@ -58,8 +58,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     port_manager = PortManager(hass, initial_port)
     await port_manager.async_load()
 
-    # Check if initial port changed (port_manager will have reset mappings)
-    # If so, we need to cleanup existing bridges before creating new ones
+    # Check if initial port changed
     port_changed = (
         port_manager._saved_initial_port is not None
         and port_manager._saved_initial_port != initial_port
@@ -68,12 +67,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Initialize BridgeManager with PortManager
     bridge_manager = BridgeManager(hass, port_manager)
 
-    # Clean up any stale bridges from previous attempts or port changes
-    await bridge_manager.cleanup_stale_bridges()
-
-    # If port changed, save the reset state
+    # Only cleanup and reset if port changed
     if port_changed:
+        _LOGGER.info(
+            "Initial port changed from %d to %d, recreating all bridges",
+            port_manager._saved_initial_port,
+            initial_port,
+        )
+        await bridge_manager.cleanup_stale_bridges()
+        port_manager.reset_all_ports(initial_port)
         await port_manager.async_save()
+    else:
+        # Port didn't change, just cleanup any orphaned bridges
+        # (bridges that exist but whose areas are no longer configured)
+        _LOGGER.debug("Initial port unchanged, preserving existing bridges")
 
     # Store in hass.data for access by other components
     hass.data.setdefault(DOMAIN, {})
@@ -108,11 +115,36 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         areas_to_process = discovered_areas
         _LOGGER.info("Creating bridges for all %d areas", len(areas_to_process))
 
+    # Get list of area_ids we should have bridges for
+    configured_area_ids = {area.area_id for area in areas_to_process}
+
+    # Remove bridges for areas that are no longer configured
+    if not port_changed:
+        existing_bridges = bridge_manager.get_all_bridges()
+        for area_id in list(existing_bridges.keys()):
+            if area_id not in configured_area_ids:
+                _LOGGER.info(
+                    "Removing bridge for area %s (no longer configured)",
+                    area_id,
+                )
+                await bridge_manager.remove_bridge(area_id)
+
+    # Create bridges for configured areas
     for area in areas_to_process:
-        _LOGGER.info("  - %s (id: %s)", area.name, area.area_id)
+        area_id = area.area_id
+
+        # Check if bridge already exists for this area
+        if not port_changed and port_manager.has_port(area_id):
+            _LOGGER.debug(
+                "Bridge for area %s already exists, skipping creation",
+                area_id,
+            )
+            continue
+
+        _LOGGER.info("  - %s (id: %s)", area.name, area_id)
 
         # Get entities for this area and apply filter
-        area_entities = await area_manager.async_get_entities_for_area(area.area_id)
+        area_entities = await area_manager.async_get_entities_for_area(area_id)
         filtered_entities = entity_filter.filter_entities(area_entities)
         _LOGGER.info(
             "    Entities: %d total, %d after filtering",

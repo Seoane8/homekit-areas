@@ -12,6 +12,7 @@ from typing import Any
 
 from homeassistant.config_entries import SOURCE_IMPORT
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import area_registry as ar
 
 from .const import HOMEKIT_DOMAIN
 from .models import AreaBridge
@@ -56,7 +57,49 @@ class BridgeManager:
         self.hass = hass
         self.port_manager = port_manager
         # Mapping: area_id -> {entry_id, port}
+        # This is populated from existing HomeKit entries on first access
         self._bridge_registry: dict[str, dict[str, Any]] = {}
+        self._registry_loaded = False
+
+    def _load_registry_from_entries(self) -> None:
+        """Load bridge registry from existing HomeKit config entries."""
+        if self._registry_loaded:
+            return
+
+        for entry in self.hass.config_entries.async_entries(HOMEKIT_DOMAIN):
+            entry_name = entry.data.get(CONF_NAME, "")
+            # Check if this entry was created by us (name starts with "HomeKit ")
+            if entry_name.startswith("HomeKit "):
+                # Extract area_id from name (e.g., "HomeKit Salón" -> "salon")
+                # We need to find the area by name
+                area_id = None
+                port = entry.data.get(CONF_PORT)
+
+                # Try to find area by name
+                area_registry = ar.async_get(self.hass)
+                for area in area_registry.async_list_areas():
+                    expected_name = f"HomeKit {area.name}"
+                    if entry_name == expected_name:
+                        area_id = area.id
+                        break
+
+                if area_id and port:
+                    self._bridge_registry[area_id] = {
+                        "entry_id": entry.entry_id,
+                        "port": port,
+                    }
+                    _LOGGER.debug(
+                        "Loaded existing bridge for area %s: entry_id=%s, port=%d",
+                        area_id,
+                        entry.entry_id,
+                        port,
+                    )
+
+        self._registry_loaded = True
+        _LOGGER.info(
+            "Loaded %d existing bridges from config entries",
+            len(self._bridge_registry),
+        )
 
     async def cleanup_stale_bridges(self) -> None:
         """Remove all HomeKit bridges created by this integration.
@@ -246,6 +289,8 @@ class BridgeManager:
         Args:
             area_id: The area ID of the bridge to remove
         """
+        self._load_registry_from_entries()
+
         if area_id not in self._bridge_registry:
             _LOGGER.warning("Cannot remove bridge: area %s not found", area_id)
             return
@@ -281,4 +326,5 @@ class BridgeManager:
         Returns:
             Dict mapping area_id to bridge info
         """
+        self._load_registry_from_entries()
         return self._bridge_registry.copy()
