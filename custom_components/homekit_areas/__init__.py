@@ -6,6 +6,7 @@ A custom integration that manages one HomeKit Bridge (through the official
 
 from __future__ import annotations
 
+import asyncio
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -106,22 +107,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Check if initial port changed
     if port_changed:
         _LOGGER.info(
-            "Initial port changed from %d to %d, will recreate bridges with new ports",
+            "Initial port changed from %d to %d, recreating bridges",
             port_manager._saved_initial_port,
             initial_port,
         )
-        # Reset port mappings
-        port_manager.reset_all_ports(initial_port)
-        await port_manager.async_save()
-        # Remove all existing bridges for configured areas (they have old ports)
+        # Remove ALL existing bridges first (they have old ports)
         existing_bridges = bridge_manager.get_all_bridges()
         for area_id in list(existing_bridges.keys()):
-            if area_id in configured_area_ids:
-                _LOGGER.info(
-                    "Removing bridge for area %s (port changed)",
-                    area_id,
-                )
-                await bridge_manager.remove_bridge(area_id)
+            _LOGGER.info(
+                "Removing bridge for area %s (port changed)",
+                area_id,
+            )
+            await bridge_manager.remove_bridge(area_id)
+
+        # Wait for all bridges to be fully removed
+        await asyncio.sleep(1.0)
+
+        # Reset port mappings after removing bridges
+        port_manager.reset_all_ports(initial_port)
+        await port_manager.async_save()
     else:
         # Port didn't change, preserve existing bridges
         _LOGGER.debug("Initial port unchanged, preserving existing bridges")
