@@ -89,6 +89,16 @@ class BridgeManager:
                         "entry_id": entry.entry_id,
                         "port": port,
                     }
+                    # Synchronize port_manager with existing bridge
+                    existing_port = self.port_manager.get_port(area_id)
+                    if existing_port != port:
+                        _LOGGER.debug(
+                            "Synchronizing port for area %s: %s -> %d",
+                            area_id,
+                            existing_port,
+                            port,
+                        )
+                        self.port_manager._port_mapping[area_id] = port
                     _LOGGER.debug(
                         "Loaded existing bridge for area %s: entry_id=%s, port=%d",
                         area_id,
