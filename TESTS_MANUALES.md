@@ -223,16 +223,16 @@ Formato de cada test:
 
 ### Test 7.1 — Creación de ConfigEntry de HomeKit
 
-- [ ] **Paso 1:** Configurar la integración con áreas seleccionadas
-- [ ] **Paso 2:** Verificar en "Dispositivos y servicios" que aparecen entradas del dominio `homekit`
-- [ ] **Paso 3:** Verificar que cada entrada tiene el nombre "HomeKit <área>"
-- [ ] **Resultado esperado:** Se crea una entrada `homekit` por área gestionada
+- [x] **Paso 1:** Configurar la integración con áreas seleccionadas
+- [x] **Paso 2:** Verificar en "Dispositivos y servicios" que aparecen entradas del dominio `homekit`
+- [x] **Paso 3:** Verificar que cada entrada tiene el nombre "HomeKit <área>"
+- [x] **Resultado esperado:** Se crea una entrada `homekit` por área gestionada
 
 ### Test 7.2 — Arranque del bridge
 
-- [ ] **Paso 1:** Verificar en los logs que cada bridge arranca
-- [ ] **Paso 2:** Verificar que se asigna un puerto a cada bridge
-- [ ] **Resultado esperado:** Los bridges arrancan en los puertos esperados
+- [x] **Paso 1:** Verificar en los logs que cada bridge arranca
+- [x] **Paso 2:** Verificar que se asigna un puerto a cada bridge
+- [x] **Resultado esperado:** Los bridges arrancan en los puertos esperados
 
 ---
 
@@ -242,21 +242,21 @@ Formato de cada test:
 
 ### Test 8.1 — Asignación de puertos
 
-- [ ] **Paso 1:** Configurar puerto inicial `21070`
-- [ ] **Paso 2:** Verificar que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
-- [ ] **Resultado esperado:** Los puertos se asignan correctamente
+- [x] **Paso 1:** Configurar puerto inicial `21070`
+- [x] **Paso 2:** Verificar que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
+- [x] **Resultado esperado:** Los puertos se asignan correctamente
 
 ### Test 8.2 — Persistencia tras reinicio
 
-- [ ] **Paso 1:** Reiniciar Home Assistant
-- [ ] **Paso 2:** Verificar que los puertos se mantienen
-- [ ] **Resultado esperado:** Los puertos no cambian tras reiniciar
+- [x] **Paso 1:** Reiniciar Home Assistant
+- [x] **Paso 2:** Verificar que los puertos se mantienen
+- [x] **Resultado esperado:** Los puertos no cambian tras reiniciar
 
 ### Test 8.3 — No reutilización de puertos liberados
 
-- [ ] **Paso 1:** Eliminar un área (ej: Cocina, puerto 21071)
-- [ ] **Paso 2:** Verificar que el puerto 21071 no se reasigna a otra área
-- [ ] **Resultado esperado:** El puerto liberado no se reutiliza en V1
+- [x] **Paso 1:** Eliminar un área (ej: Cocina, puerto 21071)
+- [x] **Paso 2:** Verificar que el puerto 21071 no se reasigna a otra área
+- [x] **Resultado esperado:** El puerto liberado no se reutiliza en V1
 
 ---
 
@@ -454,7 +454,7 @@ Formato de cada test:
 | 5 | 4 | 0/4 |
 | 6 | 3 | 3/3 |
 | 7 | 2 | 2/2 |
-| 8 | 3 | 0/3 |
+| 8 | 3 | 3/3 |
 | 9 | 4 | 0/4 |
 | 10 | 3 | 0/3 |
 | 11 | 1 | 0/1 |
@@ -465,4 +465,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **49** | **24/49** |
+| **Total** | **49** | **27/49** |

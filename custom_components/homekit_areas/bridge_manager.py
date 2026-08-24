@@ -15,6 +15,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import HOMEKIT_DOMAIN
 from .models import AreaBridge
+from .port_manager import PortManager
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,9 +46,15 @@ class BridgeManager:
     - Manage user configuration (ConfigFlow does this)
     """
 
-    def __init__(self, hass: HomeAssistant) -> None:
-        """Initialize the BridgeManager."""
+    def __init__(self, hass: HomeAssistant, port_manager: PortManager) -> None:
+        """Initialize the BridgeManager.
+
+        Args:
+            hass: Home Assistant instance
+            port_manager: PortManager for persistent port allocation
+        """
         self.hass = hass
+        self.port_manager = port_manager
         # Mapping: area_id -> {entry_id, port}
         self._bridge_registry: dict[str, dict[str, Any]] = {}
 
@@ -87,8 +94,11 @@ class BridgeManager:
         """
         area_id = bridge.area_id
         name = bridge.name
-        port = bridge.port
         entities = bridge.entities
+
+        # Get or allocate port from PortManager
+        port = self.port_manager.allocate_port(area_id)
+        bridge.port = port  # Update bridge with allocated port
 
         _LOGGER.info(
             "Creating bridge for area %s: %s (port %d, %d entities)",
@@ -124,6 +134,8 @@ class BridgeManager:
                 "entry_id": entry_id,
                 "port": port,
             }
+            # Save port mapping to persistent storage
+            await self.port_manager.async_save()
             _LOGGER.info(
                 "Bridge created for area %s: entry_id=%s",
                 area_id,
@@ -226,6 +238,7 @@ class BridgeManager:
         """Remove a HomeKit bridge for an area.
 
         Removes the ConfigEntry and cleans up the registry.
+        The port is released but NOT reused in V1.
 
         Args:
             area_id: The area ID of the bridge to remove
@@ -241,6 +254,11 @@ class BridgeManager:
 
         # Clean up registry
         del self._bridge_registry[area_id]
+
+        # Release port (but it will NOT be reused in V1)
+        self.port_manager.release_port(area_id)
+        await self.port_manager.async_save()
+
         _LOGGER.info("Bridge removed for area %s", area_id)
 
     def get_bridge_info(self, area_id: str) -> dict[str, Any] | None:

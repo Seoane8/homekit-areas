@@ -12,7 +12,7 @@ Estado del desarrollo fase por fase.
 | 5 | Area Manager | ✅ Completado | — | `area_manager.py` con descubrimiento de áreas, detección de cambios y obtención de entidades |
 | 6 | Entity Filter | ✅ Completado | — | `entity_filter.py` con pipeline de filtrado (dominios, exclusiones, no soportados). Tests unitarios incluidos. |
 | 7 | Bridge Manager | ✅ Completado | — | `bridge_manager.py` con create_bridge, start_bridge, stop_bridge, update_bridge. Usa ConfigEntry-s del dominio `homekit`. |
-| 8 | Persistencia de puertos | ⏳ Pendiente | — | |
+| 8 | Persistencia de puertos | ✅ Completado | — | `port_manager.py` con persistencia de mapping area_id→port. Puertos no se reutilizan. |
 | 9 | Primer Bridge | ⏳ Pendiente | — | |
 | 10 | Múltiples Bridges | ⏳ Pendiente | — | |
 | 11 | Detección de cambios | ⏳ Pendiente | — | |
@@ -232,3 +232,32 @@ Implementado el BridgeManager para orquestar bridges HomeKit por área.
 
 **Validación:**
 - Ruff check + format limpios
+
+### 2026-08-24 — Fin Fase 8 (Persistencia de puertos)
+
+Implementado el PortManager para persistir el mapping area_id → port.
+
+**Archivos creados:**
+- `port_manager.py` — Clase `PortManager` con responsabilidades:
+  - `async_load()` — Carga mapping desde storage
+  - `async_save()` — Guarda mapping en storage
+  - `get_port(area_id)` — Obtiene puerto asignado
+  - `allocate_port(area_id)` — Asigna puerto (reutiliza si ya existe)
+  - `release_port(area_id)` — Libera puerto (NO se reutiliza en V1)
+  - `get_all_mappings()` — Obtiene todos los mappings
+  - `has_port(area_id)` — Verifica si un área tiene puerto
+
+**Diseño:**
+- Usa `Store` de Home Assistant para persistencia en `.storage/homekit_areas_port_mapping`
+- Mantiene `_port_mapping: dict[area_id → port]` y `_next_port` para siguiente asignación
+- Puertos liberados NO se reutilizan (V1): no hay lista de puertos libres
+- Integrado en BridgeManager: `create_bridge` usa `allocate_port`, `remove_bridge` usa `release_port`
+- Mapping se guarda automáticamente después de cada cambio
+
+**Archivos modificados:**
+- `bridge_manager.py` — Acepta `PortManager` en constructor, usa para asignar/liberar puertos
+- `__init__.py` — Inicializa `PortManager`, lo pasa a `BridgeManager`
+
+**Validación:**
+- Ruff check + format limpios
+- Tests manuales completados (3/3)

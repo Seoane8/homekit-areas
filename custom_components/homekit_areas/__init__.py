@@ -23,6 +23,7 @@ from .const import (
     DOMAIN,
 )
 from .entity_filter import EntityFilter
+from .port_manager import PortManager
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,8 +54,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         excluded_entities=excluded_entities,
     )
 
-    # Initialize BridgeManager
-    bridge_manager = BridgeManager(hass)
+    # Initialize PortManager for persistent port allocation
+    port_manager = PortManager(hass, initial_port)
+    await port_manager.async_load()
+
+    # Initialize BridgeManager with PortManager
+    bridge_manager = BridgeManager(hass, port_manager)
 
     # Clean up any stale bridges from previous attempts
     await bridge_manager.cleanup_stale_bridges()
@@ -64,6 +69,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = {
         "area_manager": area_manager,
         "entity_filter": entity_filter,
+        "port_manager": port_manager,
         "bridge_manager": bridge_manager,
         "config": {
             "areas": areas,
@@ -91,7 +97,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         areas_to_process = discovered_areas
         _LOGGER.info("Creating bridges for all %d areas", len(areas_to_process))
 
-    current_port = initial_port
     for area in areas_to_process:
         _LOGGER.info("  - %s (id: %s)", area.name, area.area_id)
 
@@ -104,13 +109,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             len(filtered_entities),
         )
 
-        # Update bridge with filtered entities and port
-        area.port = current_port
+        # Update bridge with filtered entities
+        # Port will be allocated by PortManager in create_bridge
         area.entities = filtered_entities
 
         # Create bridge for this area
         await bridge_manager.create_bridge(area)
-        current_port += 1
 
     return True
 
