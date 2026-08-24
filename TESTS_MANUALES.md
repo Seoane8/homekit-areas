@@ -238,26 +238,37 @@ Formato de cada test:
 
 ## Fase 8 — Persistencia de puertos
 
-> Verificar que los puertos persisten entre reinicios.
+> Verificar que los puertos persisten entre reinicios y se comportan correctamente ante cambios de configuración.
 
-### Test 8.1 — Asignación de puertos
+### Test 8.1 — Asignación inicial de puertos
 
 - [ ] **Paso 1:** Configurar puerto inicial `21070`
 - [ ] **Paso 2:** Verificar en los logs que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
+- [ ] **Paso 3:** Verificar que el log muestra "Loaded X existing bridges from config entries"
 - [ ] **Resultado esperado:** Los puertos se asignan correctamente
 
 ### Test 8.2 — Persistencia tras reinicio
 
 - [ ] **Paso 1:** Reiniciar Home Assistant
-- [ ] **Paso 2:** Verificar en los logs que los puertos se mantienen
-- [ ] **Resultado esperado:** Los puertos no cambian tras reiniciar
+- [ ] **Paso 2:** Verificar en los logs que los puertos se mantienen (no aparecen mensajes de "resetting all ports")
+- [ ] **Paso 3:** Verificar que los bridges existentes se preservan
+- [ ] **Resultado esperado:** Los puertos no cambian tras reiniciar, los bridges se mantienen
 
 ### Test 8.3 — No reutilización de puertos liberados
 
 - [ ] **Paso 1:** Eliminar un área de la configuración (ej: Cocina, puerto 21071)
-- [ ] **Paso 2:** Añadir otra área nueva
-- [ ] **Paso 3:** Verificar que el puerto 21071 no se reasigna a la nueva área
+- [ ] **Paso 2:** Reiniciar Home Assistant
+- [ ] **Paso 3:** Añadir otra área nueva a la configuración
+- [ ] **Paso 4:** Verificar que el puerto 21071 no se reasigna a la nueva área (debería recibir 21073 o siguiente)
 - [ ] **Resultado esperado:** El puerto liberado no se reutiliza en V1
+
+### Test 8.4 — Cambio de puerto inicial
+
+- [ ] **Paso 1:** Cambiar el puerto inicial a `21080` en la configuración
+- [ ] **Paso 2:** Reiniciar Home Assistant
+- [ ] **Paso 3:** Verificar en los logs que aparece "Initial port changed from 21070 to 21080, resetting all ports"
+- [ ] **Paso 4:** Verificar que todos los bridges se recrean con los nuevos puertos (21080, 21081, 21082...)
+- [ ] **Resultado esperado:** Todos los puertos se reasignan desde el nuevo puerto inicial
 
 ---
 
@@ -455,7 +466,7 @@ Formato de cada test:
 | 5 | 4 | 0/4 |
 | 6 | 3 | 3/3 |
 | 7 | 2 | 2/2 |
-| 8 | 3 | 0/3 |
+| 8 | 4 | 0/4 |
 | 9 | 4 | 0/4 |
 | 10 | 3 | 0/3 |
 | 11 | 1 | 0/1 |
@@ -466,4 +477,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **49** | **24/49** |
+| **Total** | **50** | **24/50** |
