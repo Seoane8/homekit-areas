@@ -15,9 +15,9 @@ Estado del desarrollo fase por fase.
 | 8 | Persistencia de puertos | ✅ Completado | — | `port_manager.py` con persistencia de mapping area_id→port. Puertos no se reutilizan. |
 | 9 | Primer Bridge | ✅ Completado | — | Validado con 3 bridges simultáneos. Arranque, pairing, luces independientes y reinicio funcionan correctamente. |
 | 10 | Múltiples Bridges | ✅ Completado | — | Validado con 3 bridges (Salón, Dormitorio, Entrada). Todos activos, pairing independiente, entidades segregadas. |
-| 11 | Detección de cambios | ⏳ Pendiente | — | |
-| 12 | Cambio de área | ⏳ Pendiente | — | |
-| 13 | Nuevas entidades | ⏳ Pendiente | — | |
+| 11 | Detección de cambios | ✅ Completado | — | Listener para `entity_registry_updated` y `area_registry_updated`. Callbacks para notificar cambios. |
+| 12 | Cambio de área | ✅ Completado | — | Actualización dinámica de bridges cuando una entidad cambia de área. Sin reinicio. |
+| 13 | Nuevas entidades | ✅ Completado | — | Detección y adición automática de nuevas entidades al bridge correspondiente. |
 | 14 | Nuevas áreas | ⏳ Pendiente | — | |
 | 15 | Eliminación de áreas | ⏳ Pendiente | — | |
 | 16 | Cambios de nombre | ⏳ Pendiente | — | |
@@ -293,3 +293,42 @@ Validación combinada de las fases 9 y 10 mediante pruebas reales con Apple Home
 
 **Conclusión:**
 La arquitectura de orquestar ConfigEntry-s del dominio `homekit` funciona correctamente tanto para un solo bridge como para múltiples bridges simultáneos. La integración está lista para continuar con las fases de detección de cambios dinámicos.
+
+### 2026-08-24 — Fin Fases 11, 12 y 13 (Detección de cambios dinámicos)
+
+Implementada la detección y respuesta automática a cambios en el registro de entidades y áreas.
+
+**Archivos modificados:**
+
+**`area_manager.py`:**
+- Añadido listener para `entity_registry_updated`
+- Implementado sistema de callbacks para notificar cambios
+- Tipos de cambios detectados:
+  - `entity_area_changed`: Entidad movida entre áreas
+  - `new_entity`: Nueva entidad en un área gestionada
+  - `area_created`: Nueva área creada
+  - `area_removed`: Área eliminada
+  - `area_renamed`: Área renombrada
+
+**`bridge_manager.py`:**
+- Añadido `update_bridge_entities(area_id, entities)`: Actualiza entidades de un bridge sin recrearlo
+- Añadido `rename_bridge(area_id, new_name)`: Renombra un bridge preservando puerto y pairing
+
+**`__init__.py`:**
+- Registrado callback de cambios en AreaManager
+- Implementada lógica de respuesta a cambios:
+  - `entity_area_changed`: Actualiza ambos bridges (origen y destino)
+  - `new_entity`: Añade entidad al bridge del área
+  - `area_renamed`: Renombra el bridge correspondiente
+  - `area_created`: Crea nuevo bridge si el área está configurada
+  - `area_removed`: Elimina bridge del área eliminada
+
+**Comportamiento:**
+- Los cambios se detectan automáticamente sin reiniciar Home Assistant
+- Los bridges se actualizan preservando el pairing con Apple Home
+- Las entidades se mueven entre bridges automáticamente
+- Nuevas entidades se añaden automáticamente al bridge correspondiente
+
+**Validación:**
+- Ruff check + format limpios
+- Tests manuales completados (3/3)

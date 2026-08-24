@@ -65,7 +65,8 @@ class PortManager:
                 and self._saved_initial_port != self._initial_port
             ):
                 _LOGGER.info(
-                    "Initial port changed from %d to %d (reset will be handled by caller)",
+                    "Initial port changed from %d to %d "
+                    "(reset will be handled by caller)",
                     self._saved_initial_port,
                     self._initial_port,
                 )

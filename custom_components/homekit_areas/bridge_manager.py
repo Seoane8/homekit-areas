@@ -291,6 +291,91 @@ class BridgeManager:
         await self.hass.config_entries.async_reload(entry_id)
         _LOGGER.info("Bridge updated for area %s", area_id)
 
+    async def update_bridge_entities(self, area_id: str, entities: set[str]) -> None:
+        """Update entities for an existing bridge.
+
+        This is a convenience method for updating bridge entities without
+        creating a full AreaBridge object.
+
+        Args:
+            area_id: The area ID
+            entities: Set of entity_ids to include in the bridge
+        """
+        if area_id not in self._bridge_registry:
+            _LOGGER.warning(
+                "Cannot update entities: bridge for area %s not found", area_id
+            )
+            return
+
+        entry_id = self._bridge_registry[area_id]["entry_id"]
+        entry = self.hass.config_entries.async_get_entry(entry_id)
+
+        if entry is None:
+            _LOGGER.error("ConfigEntry %s not found for area %s", entry_id, area_id)
+            return
+
+        _LOGGER.info(
+            "Updating entities for area %s: %d entities",
+            area_id,
+            len(entities),
+        )
+
+        # Update options with new entity filter
+        new_options = {
+            **entry.options,
+            CONF_FILTER: {
+                "include_entities": list(entities),
+            },
+        }
+
+        self.hass.config_entries.async_update_entry(entry, options=new_options)
+
+        # Reload to apply changes
+        await self.hass.config_entries.async_reload(entry_id)
+        _LOGGER.info("Bridge entities updated for area %s", area_id)
+
+    async def rename_bridge(self, area_id: str, new_name: str) -> None:
+        """Rename a HomeKit bridge for an area.
+
+        Updates the bridge name while preserving port and pairing.
+
+        Args:
+            area_id: The area ID
+            new_name: The new name for the bridge
+        """
+        if area_id not in self._bridge_registry:
+            _LOGGER.warning(
+                "Cannot rename bridge: bridge for area %s not found", area_id
+            )
+            return
+
+        entry_id = self._bridge_registry[area_id]["entry_id"]
+        entry = self.hass.config_entries.async_get_entry(entry_id)
+
+        if entry is None:
+            _LOGGER.error("ConfigEntry %s not found for area %s", entry_id, area_id)
+            return
+
+        old_name = entry.data.get(CONF_NAME, "")
+        _LOGGER.info(
+            "Renaming bridge for area %s: %s -> %s",
+            area_id,
+            old_name,
+            new_name,
+        )
+
+        # Update data with new name
+        new_data = {
+            **entry.data,
+            CONF_NAME: new_name,
+        }
+
+        self.hass.config_entries.async_update_entry(entry, data=new_data)
+
+        # Reload to apply changes
+        await self.hass.config_entries.async_reload(entry_id)
+        _LOGGER.info("Bridge renamed for area %s", area_id)
+
     async def remove_bridge(self, area_id: str) -> None:
         """Remove a HomeKit bridge for an area.
 

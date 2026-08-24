@@ -346,9 +346,9 @@ Formato de cada test:
 
 ### Test 11.1 — Detección de cambio de área
 
-- [ ] **Paso 1:** Mover una entidad a otra área en HA
-- [ ] **Paso 2:** Verificar en los logs que se detecta el evento `device_registry_updated`
-- [ ] **Resultado esperado:** El cambio se detecta automáticamente
+- [x] **Paso 1:** Mover una entidad a otra área en HA
+- [x] **Paso 2:** Verificar en los logs que se detecta el evento `entity_registry_updated`
+- [x] **Resultado esperado:** El cambio se detecta automáticamente
 
 ---
 
@@ -358,11 +358,11 @@ Formato de cada test:
 
 ### Test 12.1 — Mover entidad entre áreas
 
-- [ ] **Paso 1:** Mover `light.lampara_pie` de Salón a Dormitorio
-- [ ] **Paso 2:** Verificar que desaparece del bridge Salón
-- [ ] **Paso 3:** Verificar que aparece en el bridge Dormitorio
-- [ ] **Paso 4:** Verificar que no se pierde el pairing de los bridges
-- [ ] **Resultado esperado:** La entidad se mueve sin reiniciar HA
+- [x] **Paso 1:** Mover `light.lampara_pie` de Salón a Dormitorio
+- [x] **Paso 2:** Verificar que desaparece del bridge Salón
+- [x] **Paso 3:** Verificar que aparece en el bridge Dormitorio
+- [x] **Paso 4:** Verificar que no se pierde el pairing de los bridges
+- [x] **Resultado esperado:** La entidad se mueve sin reiniciar HA
 
 ---
 
@@ -372,9 +372,9 @@ Formato de cada test:
 
 ### Test 13.1 — Nueva entidad en un área
 
-- [ ] **Paso 1:** Añadir una nueva luz al área Salón
-- [ ] **Paso 2:** Verificar que aparece automáticamente en el bridge Salón
-- [ ] **Resultado esperado:** La nueva entidad se añade sin reiniciar
+- [x] **Paso 1:** Añadir una nueva luz al área Salón
+- [x] **Paso 2:** Verificar que aparece automáticamente en el bridge Salón
+- [x] **Resultado esperado:** La nueva entidad se añade sin reiniciar
 
 ---
 
@@ -480,12 +480,12 @@ Formato de cada test:
 | 8 | 4 | 4/4 |
 | 9 | 4 | 4/4 |
 | 10 | 3 | 3/3 |
-| 11 | 1 | 0/1 |
-| 12 | 1 | 0/1 |
-| 13 | 1 | 0/1 |
+| 11 | 1 | 1/1 |
+| 12 | 1 | 1/1 |
+| 13 | 1 | 1/1 |
 | 14 | 1 | 0/1 |
 | 15 | 1 | 0/1 |
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **50** | **35/50** |
+| **Total** | **50** | **38/50** |

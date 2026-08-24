@@ -6,8 +6,8 @@ A custom integration that manages one HomeKit Bridge (through the official
 
 from __future__ import annotations
 
-import asyncio
 import logging
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -68,6 +68,104 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Initialize BridgeManager with PortManager
     bridge_manager = BridgeManager(hass, port_manager)
 
+    # Register change callback for dynamic updates
+    async def async_handle_change(change_type: str, data: dict[str, Any]) -> None:
+        """Handle changes detected by AreaManager."""
+        if change_type == "entity_area_changed":
+            entity_id = data["entity_id"]
+            old_area_id = data["old_area_id"]
+            new_area_id = data["new_area_id"]
+
+            _LOGGER.info(
+                "Entity %s moved from %s to %s, updating bridges",
+                entity_id,
+                old_area_id,
+                new_area_id,
+            )
+
+            # Update old area bridge (remove entity)
+            if old_area_id and port_manager.has_port(old_area_id):
+                old_entities = await area_manager.async_get_entities_for_area(
+                    old_area_id
+                )
+                old_filtered = entity_filter.filter_entities(old_entities)
+                await bridge_manager.update_bridge_entities(old_area_id, old_filtered)
+
+            # Update new area bridge (add entity)
+            if new_area_id and port_manager.has_port(new_area_id):
+                new_entities = await area_manager.async_get_entities_for_area(
+                    new_area_id
+                )
+                new_filtered = entity_filter.filter_entities(new_entities)
+                await bridge_manager.update_bridge_entities(new_area_id, new_filtered)
+
+        elif change_type == "new_entity":
+            entity_id = data["entity_id"]
+            area_id = data["area_id"]
+
+            # Check if this area is managed
+            if port_manager.has_port(area_id):
+                _LOGGER.info(
+                    "New entity %s in area %s, updating bridge",
+                    entity_id,
+                    area_id,
+                )
+                new_entities = await area_manager.async_get_entities_for_area(area_id)
+                new_filtered = entity_filter.filter_entities(new_entities)
+                await bridge_manager.update_bridge_entities(area_id, new_filtered)
+
+        elif change_type == "area_renamed":
+            area_id = data["area_id"]
+            new_name = data["new_name"]
+
+            if port_manager.has_port(area_id):
+                bridge_name = f"HomeKit {new_name}"
+                _LOGGER.info(
+                    "Area %s renamed to %s, updating bridge name",
+                    area_id,
+                    new_name,
+                )
+                await bridge_manager.rename_bridge(area_id, bridge_name)
+
+        elif change_type == "area_created":
+            area_id = data["area_id"]
+            name = data["name"]
+
+            # Check if this area should be managed
+            if not areas or area_id in areas:
+                _LOGGER.info(
+                    "New area %s detected, creating bridge",
+                    area_id,
+                )
+                new_entities = await area_manager.async_get_entities_for_area(area_id)
+                new_filtered = entity_filter.filter_entities(new_entities)
+                from .models import AreaBridge
+
+                new_bridge = AreaBridge(
+                    area_id=area_id,
+                    name=f"HomeKit {name}",
+                    port=0,  # Will be allocated by PortManager
+                    entities=new_filtered,
+                )
+                await bridge_manager.create_bridge(new_bridge)
+
+        elif change_type == "area_removed":
+            area_id = data["area_id"]
+
+            if port_manager.has_port(area_id):
+                _LOGGER.info(
+                    "Area %s removed, removing bridge",
+                    area_id,
+                )
+                await bridge_manager.remove_bridge(area_id)
+
+    # Register the callback (wrap in sync function for the callback system)
+    def handle_change(change_type: str, data: dict[str, Any]) -> None:
+        """Sync wrapper for async change handler."""
+        hass.async_create_task(async_handle_change(change_type, data))
+
+    area_manager.register_change_callback(handle_change)
+
     # Store in hass.data for access by other components
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
@@ -120,7 +218,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 area_id,
             )
             await bridge_manager.remove_bridge(area_id)
-        
+
         _LOGGER.info("All existing bridges removed, resetting ports")
         # Reset port mappings
         port_manager.reset_all_ports(initial_port)
