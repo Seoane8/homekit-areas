@@ -11,7 +11,7 @@ Estado del desarrollo fase por fase.
 | 4 | Modelo de datos | ✅ Completado | — | `models.py` con `AreaBridge` (area_id, name, port, entities). Identidad por `area_id`. |
 | 5 | Area Manager | ✅ Completado | — | `area_manager.py` con descubrimiento de áreas, detección de cambios y obtención de entidades |
 | 6 | Entity Filter | ✅ Completado | — | `entity_filter.py` con pipeline de filtrado (dominios, exclusiones, no soportados). Tests unitarios incluidos. |
-| 7 | Bridge Manager | ⏳ Pendiente | — | |
+| 7 | Bridge Manager | ✅ Completado | — | `bridge_manager.py` con create_bridge, start_bridge, stop_bridge, update_bridge. Usa ConfigEntry-s del dominio `homekit`. |
 | 8 | Persistencia de puertos | ⏳ Pendiente | — | |
 | 9 | Primer Bridge | ⏳ Pendiente | — | |
 | 10 | Múltiples Bridges | ⏳ Pendiente | — | |
@@ -205,3 +205,30 @@ Implementado el EntityFilter con pipeline de filtrado para entidades de HomeKit.
 **Validación:**
 - Ruff check + format limpios
 - Tests unitarios creados (10 tests)
+
+### 2026-08-23 — Fin Fase 7 (Bridge Manager)
+
+Implementado el BridgeManager para orquestar bridges HomeKit por área.
+
+**Archivos creados:**
+- `bridge_manager.py` — Clase `BridgeManager` con responsabilidades:
+  - `create_bridge(bridge)` — Crea ConfigEntry del dominio `homekit` vía `flow.async_init(SOURCE_IMPORT)`
+  - `start_bridge(area_id)` — Reinicia un bridge (reload del ConfigEntry)
+  - `stop_bridge(area_id)` — Detiene un bridge (unload del ConfigEntry)
+  - `update_bridge(bridge)` — Actualiza entidades del bridge y recarga
+  - `remove_bridge(area_id)` — Elimina el ConfigEntry
+  - `get_bridge_info(area_id)` — Obtiene info de un bridge
+  - `get_all_bridges()` — Obtiene todos los bridges registrados
+
+**Diseño:**
+- Mantiene `_bridge_registry: dict[area_id → {entry_id, port}]` para persistencia
+- Usa `SOURCE_IMPORT` para crear ConfigEntry-s del dominio `homekit` con data completo
+- Cada bridge tiene: name, port, mode=bridge, filter (include_entities), exclude_accessory_mode=True
+- Integrado en `__init__.py`: crea bridges automáticamente al cargar la integración
+- Asigna puertos consecutivos desde `initial_port` (21070 por defecto)
+
+**Archivos modificados:**
+- `__init__.py` — Inicializa BridgeManager, crea bridges para cada área descubierta
+
+**Validación:**
+- Ruff check + format limpios

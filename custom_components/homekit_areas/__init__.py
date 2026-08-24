@@ -12,6 +12,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
 from .area_manager import AreaManager
+from .bridge_manager import BridgeManager
 from .const import (
     CONF_AREAS,
     CONF_DOMAINS,
@@ -52,11 +53,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         excluded_entities=excluded_entities,
     )
 
+    # Initialize BridgeManager
+    bridge_manager = BridgeManager(hass)
+
     # Store in hass.data for access by other components
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
         "area_manager": area_manager,
         "entity_filter": entity_filter,
+        "bridge_manager": bridge_manager,
         "config": {
             "areas": areas,
             "domains": domains,
@@ -65,9 +70,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         },
     }
 
-    # Discover areas and log them
+    # Discover areas and create bridges
     discovered_areas = await area_manager.async_discover_areas()
     _LOGGER.info("Discovered %d areas:", len(discovered_areas))
+
+    current_port = initial_port
     for area in discovered_areas:
         _LOGGER.info("  - %s (id: %s)", area.name, area.area_id)
 
@@ -79,6 +86,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             len(area_entities),
             len(filtered_entities),
         )
+
+        # Update bridge with filtered entities and port
+        area.port = current_port
+        area.entities = filtered_entities
+
+        # Create bridge for this area
+        await bridge_manager.create_bridge(area)
+        current_port += 1
 
     return True
 

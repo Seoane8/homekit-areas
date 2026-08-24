@@ -199,21 +199,21 @@ Formato de cada test:
 
 ### Test 6.1 — Filtrado por dominios
 
-- [ ] **Paso 1:** Configurar dominios: `light`, `switch`
-- [ ] **Paso 2:** Verificar que solo se incluyen entidades de esos dominios
-- [ ] **Resultado esperado:** Entidades de otros dominios (ej: `sensor`) se excluyen
+- [x] **Paso 1:** Configurar dominios: `light`, `switch`
+- [x] **Paso 2:** Verificar que solo se incluyen entidades de esos dominios
+- [x] **Resultado esperado:** Entidades de otros dominios (ej: `sensor`) se excluyen
 
 ### Test 6.2 — Filtrado por entidades excluidas
 
-- [ ] **Paso 1:** Configurar entidades excluidas: `light.lampara_pie`
-- [ ] **Paso 2:** Verificar que esa entidad se excluye
-- [ ] **Resultado esperado:** La entidad excluida no aparece en el bridge
+- [x] **Paso 1:** Configurar entidades excluidas: `light.lampara_pie`
+- [x] **Paso 2:** Verificar que esa entidad se excluye
+- [x] **Resultado esperado:** La entidad excluida no aparece en el bridge
 
 ### Test 6.3 — Pipeline completo
 
-- [ ] **Paso 1:** Configurar dominios + exclusiones
-- [ ] **Paso 2:** Verificar que el pipeline funciona: entidades del área → dominios permitidos → entidades excluidas → entidades válidas
-- [ ] **Resultado esperado:** Solo las entidades válidas pasan el filtro
+- [x] **Paso 1:** Configurar dominios + exclusiones
+- [x] **Paso 2:** Verificar que el pipeline funciona: entidades del área → dominios permitidos → entidades excluidas → entidades válidas
+- [x] **Resultado esperado:** Solo las entidades válidas pasan el filtro
 
 ---
 
@@ -453,7 +453,7 @@ Formato de cada test:
 | 4 | 1 | 1/1 |
 | 5 | 4 | 0/4 |
 | 6 | 3 | 3/3 |
-| 7 | 2 | 0/2 |
+| 7 | 2 | 2/2 |
 | 8 | 3 | 0/3 |
 | 9 | 4 | 0/4 |
 | 10 | 3 | 0/3 |
@@ -465,4 +465,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **49** | **22/49** |
+| **Total** | **49** | **24/49** |
