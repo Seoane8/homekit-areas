@@ -13,7 +13,7 @@ from typing import Any
 from homeassistant.config_entries import SOURCE_IMPORT
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN as HOMEKIT_DOMAIN
+from .const import HOMEKIT_DOMAIN
 from .models import AreaBridge
 
 _LOGGER = logging.getLogger(__name__)

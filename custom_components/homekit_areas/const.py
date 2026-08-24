@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "homekit_areas"
+HOMEKIT_DOMAIN = "homekit"
 PLATFORMS: list[str] = []
 
 VERSION = "0.1.0"
