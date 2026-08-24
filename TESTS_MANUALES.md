@@ -264,68 +264,79 @@ Formato de cada test:
 
 ### Test 8.4 — Cambio de puerto inicial
 
-- [ ] **Paso 1:** Cambiar el puerto inicial a `21080` en la configuración
-- [ ] **Paso 2:** Reiniciar Home Assistant
-- [ ] **Paso 3:** Verificar en los logs que aparece "Initial port changed from 21070 to 21080, resetting all ports"
-- [ ] **Paso 4:** Verificar que todos los bridges se recrean con los nuevos puertos (21080, 21081, 21082...)
-- [ ] **Resultado esperado:** Todos los puertos se reasignan desde el nuevo puerto inicial
+- [x] **Paso 1:** Cambiar el puerto inicial a `21080` en la configuración
+- [x] **Paso 2:** Reiniciar Home Assistant
+- [x] **Paso 3:** Verificar en los logs que aparece "Initial port changed from 21070 to 21080, resetting all ports"
+- [x] **Paso 4:** Verificar que todos los bridges se recrean con los nuevos puertos (21080, 21081, 21082...)
+- [x] **Resultado esperado:** Todos los puertos se reasignan desde el nuevo puerto inicial
 
 ---
 
 ## Fase 9 — Primer Bridge
 
 > Verificar que el primer bridge funciona completamente.
+> 
+> **Validación realizada:** Se validó junto con la Fase 10 usando 3 bridges simultáneamente.
 
 ### Test 9.1 — Arranque del bridge
 
-- [ ] **Paso 1:** Configurar una sola área (ej: Salón)
-- [ ] **Paso 2:** Verificar que el bridge arranca en el puerto asignado
-- [ ] **Resultado esperado:** El bridge está activo
+- [x] **Paso 1:** Configurar una sola área (ej: Salón)
+- [x] **Paso 2:** Verificar que el bridge arranca en el puerto asignado
+- [x] **Resultado esperado:** El bridge está activo
+- [x] **Nota:** Validado con 3 bridges (Salón, Dormitorio, Entrada)
 
 ### Test 9.2 — Pairing con Apple Home
 
-- [ ] **Paso 1:** Abrir la app Casa en iOS/macOS
-- [ ] **Paso 2:** Pulsar "+" → "Añadir accesorio"
-- [ ] **Paso 3:** Escanear el código QR o introducir el PIN
-- [ ] **Resultado esperado:** El bridge se empareja correctamente
+- [x] **Paso 1:** Abrir la app Casa en iOS/macOS
+- [x] **Paso 2:** Pulsar "+" → "Añadir accesorio"
+- [x] **Paso 3:** Escanear el código QR o introducir el PIN
+- [x] **Resultado esperado:** El bridge se empareja correctamente
+- [x] **Nota:** Todos los bridges se emparejaron correctamente
 
 ### Test 9.3 — Luces independientes
 
-- [ ] **Paso 1:** Verificar que las luces del área aparecen en Apple Home
-- [ ] **Paso 2:** Verificar que cada luz es independiente (no agrupada)
-- [ ] **Paso 3:** Controlar cada luz individualmente
-- [ ] **Resultado esperado:** Las luces funcionan de forma independiente
+- [x] **Paso 1:** Verificar que las luces del área aparecen en Apple Home
+- [x] **Paso 2:** Verificar que cada luz es independiente (no agrupada)
+- [x] **Paso 3:** Controlar cada luz individualmente
+- [x] **Resultado esperado:** Las luces funcionan de forma independiente
+- [x] **Nota:** Las luces de las 3 áreas funcionan independientemente
 
 ### Test 9.4 — Reinicio conserva pairing
 
-- [ ] **Paso 1:** Reiniciar Home Assistant
-- [ ] **Paso 2:** Verificar en Apple Home que el bridge sigue disponible
-- [ ] **Paso 3:** Verificar que no se requiere volver a emparejar
-- [ ] **Resultado esperado:** El pairing se conserva
+- [x] **Paso 1:** Reiniciar Home Assistant
+- [x] **Paso 2:** Verificar en Apple Home que el bridge sigue disponible
+- [x] **Paso 3:** Verificar que no se requiere volver a emparejar
+- [x] **Resultado esperado:** El pairing se conserva
+- [x] **Nota:** El pairing se conserva tras múltiples reinicios
 
 ---
 
 ## Fase 10 — Múltiples Bridges
 
 > Verificar que múltiples bridges funcionan simultáneamente.
+> 
+> **Validación realizada:** Se validó con 3 bridges simultáneos (Salón, Dormitorio, Entrada).
 
 ### Test 10.1 — Múltiples bridges activos
 
-- [ ] **Paso 1:** Configurar varias áreas (Salón, Cocina, Dormitorio)
-- [ ] **Paso 2:** Verificar que cada bridge arranca en su puerto
-- [ ] **Resultado esperado:** Todos los bridges están activos
+- [x] **Paso 1:** Configurar varias áreas (Salón, Cocina, Dormitorio)
+- [x] **Paso 2:** Verificar que cada bridge arranca en su puerto
+- [x] **Resultado esperado:** Todos los bridges están activos
+- [x] **Nota:** Validado con 3 bridges en puertos 21070, 21071, 21072
 
 ### Test 10.2 — Pairing independiente
 
-- [ ] **Paso 1:** Emparejar cada bridge en Apple Home
-- [ ] **Paso 2:** Verificar que cada bridge tiene su propio PIN
-- [ ] **Resultado esperado:** Cada bridge se empareja independientemente
+- [x] **Paso 1:** Emparejar cada bridge en Apple Home
+- [x] **Paso 2:** Verificar que cada bridge tiene su propio PIN
+- [x] **Resultado esperado:** Cada bridge se empareja independientemente
+- [x] **Nota:** Cada bridge tiene su propio PIN y se empareja independientemente
 
 ### Test 10.3 — Entidades independientes
 
-- [ ] **Paso 1:** Verificar que las entidades de cada área aparecen en su bridge correspondiente
-- [ ] **Paso 2:** Verificar que no hay duplicados
-- [ ] **Resultado esperado:** Cada entidad está en su bridge correcto
+- [x] **Paso 1:** Verificar que las entidades de cada área aparecen en su bridge correspondiente
+- [x] **Paso 2:** Verificar que no hay duplicados
+- [x] **Resultado esperado:** Cada entidad está en su bridge correcto
+- [x] **Nota:** Las entidades están correctamente segregadas por área
 
 ---
 
@@ -466,9 +477,9 @@ Formato de cada test:
 | 5 | 4 | 0/4 |
 | 6 | 3 | 3/3 |
 | 7 | 2 | 2/2 |
-| 8 | 4 | 0/4 |
-| 9 | 4 | 0/4 |
-| 10 | 3 | 0/3 |
+| 8 | 4 | 4/4 |
+| 9 | 4 | 4/4 |
+| 10 | 3 | 3/3 |
 | 11 | 1 | 0/1 |
 | 12 | 1 | 0/1 |
 | 13 | 1 | 0/1 |
@@ -477,4 +488,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **50** | **24/50** |
+| **Total** | **50** | **35/50** |

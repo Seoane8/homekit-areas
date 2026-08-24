@@ -13,8 +13,8 @@ Estado del desarrollo fase por fase.
 | 6 | Entity Filter | ✅ Completado | — | `entity_filter.py` con pipeline de filtrado (dominios, exclusiones, no soportados). Tests unitarios incluidos. |
 | 7 | Bridge Manager | ✅ Completado | — | `bridge_manager.py` con create_bridge, start_bridge, stop_bridge, update_bridge. Usa ConfigEntry-s del dominio `homekit`. |
 | 8 | Persistencia de puertos | ✅ Completado | — | `port_manager.py` con persistencia de mapping area_id→port. Puertos no se reutilizan. |
-| 9 | Primer Bridge | ⏳ Pendiente | — | |
-| 10 | Múltiples Bridges | ⏳ Pendiente | — | |
+| 9 | Primer Bridge | ✅ Completado | — | Validado con 3 bridges simultáneos. Arranque, pairing, luces independientes y reinicio funcionan correctamente. |
+| 10 | Múltiples Bridges | ✅ Completado | — | Validado con 3 bridges (Salón, Dormitorio, Entrada). Todos activos, pairing independiente, entidades segregadas. |
 | 11 | Detección de cambios | ⏳ Pendiente | — | |
 | 12 | Cambio de área | ⏳ Pendiente | — | |
 | 13 | Nuevas entidades | ⏳ Pendiente | — | |
@@ -261,3 +261,35 @@ Implementado el PortManager para persistir el mapping area_id → port.
 **Validación:**
 - Ruff check + format limpios
 - Tests manuales completados (3/3)
+
+### 2026-08-24 — Fin Fases 9 y 10 (Primer Bridge y Múltiples Bridges)
+
+Validación combinada de las fases 9 y 10 mediante pruebas reales con Apple Home.
+
+**Configuración probada:**
+- 3 bridges simultáneos: Salón (21070), Dormitorio (21071), Entrada (21072)
+- Cada bridge con sus entidades filtradas por área
+- Pairing independiente con Apple Home para cada bridge
+
+**Tests validados:**
+
+**Fase 9 — Primer Bridge (4/4 tests):**
+- ✅ Test 9.1 — Arranque del bridge: Los 3 bridges arrancan correctamente en sus puertos asignados
+- ✅ Test 9.2 — Pairing con Apple Home: Cada bridge se empareja correctamente con su PIN único
+- ✅ Test 9.3 — Luces independientes: Las luces de cada área aparecen y funcionan independientemente en Apple Home
+- ✅ Test 9.4 — Reinicio conserva pairing: El pairing se mantiene tras múltiples reinicios de Home Assistant
+
+**Fase 10 — Múltiples Bridges (3/3 tests):**
+- ✅ Test 10.1 — Múltiples bridges activos: Los 3 bridges están activos simultáneamente sin conflictos
+- ✅ Test 10.2 — Pairing independiente: Cada bridge tiene su propio PIN y se empareja de forma independiente
+- ✅ Test 10.3 — Entidades independientes: Las entidades están correctamente segregadas por área, sin duplicados
+
+**Resultados clave:**
+- Los bridges creados vía `SOURCE_IMPORT` funcionan correctamente con la integración oficial de HomeKit
+- El pairing se conserva gracias a la persistencia de los ficheros `.state` en `.storage/`
+- Las entidades se filtran correctamente por área usando `include_entities` en el filtro de HomeKit
+- No hay conflictos entre múltiples bridges simultáneos
+- El control desde Apple Home funciona correctamente para todas las entidades
+
+**Conclusión:**
+La arquitectura de orquestar ConfigEntry-s del dominio `homekit` funciona correctamente tanto para un solo bridge como para múltiples bridges simultáneos. La integración está lista para continuar con las fases de detección de cambios dinámicos.
