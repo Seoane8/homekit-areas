@@ -72,10 +72,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Discover areas and create bridges
     discovered_areas = await area_manager.async_discover_areas()
-    _LOGGER.info("Discovered %d areas:", len(discovered_areas))
+    _LOGGER.info("Discovered %d areas total", len(discovered_areas))
+
+    # Filter areas based on configuration
+    if areas:
+        # Only create bridges for selected areas
+        areas_to_process = [area for area in discovered_areas if area.area_id in areas]
+        _LOGGER.info("Creating bridges for %d selected areas", len(areas_to_process))
+    else:
+        # Create bridges for all areas
+        areas_to_process = discovered_areas
+        _LOGGER.info("Creating bridges for all %d areas", len(areas_to_process))
 
     current_port = initial_port
-    for area in discovered_areas:
+    for area in areas_to_process:
         _LOGGER.info("  - %s (id: %s)", area.name, area.area_id)
 
         # Get entities for this area and apply filter
