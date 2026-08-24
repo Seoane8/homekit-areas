@@ -169,27 +169,27 @@ Formato de cada test:
 
 ### Test 5.1 — Descubrimiento de áreas
 
-- [ ] **Paso 1:** Configurar la integración con "Todas las áreas"
-- [ ] **Paso 2:** Verificar en los logs que se descubren todas las áreas de HA
-- [ ] **Resultado esperado:** Se listan todas las áreas con sus `area_id` y nombres
+- [x] **Paso 1:** Configurar la integración con "Todas las áreas"
+- [x] **Paso 2:** Verificar en los logs que se descubren todas las áreas de HA
+- [x] **Resultado esperado:** Se listan todas las áreas con sus `area_id` y nombres
 
 ### Test 5.2 — Detección de nueva área
 
-- [ ] **Paso 1:** Crear una nueva área en HA (ej: "Oficina")
-- [ ] **Paso 2:** Verificar en los logs que se detecta la nueva área
-- [ ] **Resultado esperado:** La nueva área aparece en la lista de áreas gestionadas
+- [x] **Paso 1:** Crear una nueva área en HA (ej: "Oficina")
+- [x] **Paso 2:** Verificar en los logs que se detecta la nueva área
+- [x] **Resultado esperado:** La nueva área aparece en la lista de áreas gestionadas
 
 ### Test 5.3 — Detección de área eliminada
 
-- [ ] **Paso 1:** Eliminar un área en HA
-- [ ] **Paso 2:** Verificar en los logs que se detecta la eliminación
-- [ ] **Resultado esperado:** El área eliminada desaparece de la lista
+- [x] **Paso 1:** Eliminar un área en HA
+- [x] **Paso 2:** Verificar en los logs que se detecta la eliminación
+- [x] **Resultado esperado:** El área eliminada desaparece de la lista
 
 ### Test 5.4 — Detección de cambio de nombre
 
-- [ ] **Paso 1:** Renombrar un área en HA (ej: "Salón" → "Sala de estar")
-- [ ] **Paso 2:** Verificar en los logs que se detecta el cambio de nombre
-- [ ] **Resultado esperado:** El nombre se actualiza, el `area_id` permanece igual
+- [x] **Paso 1:** Renombrar un área en HA (ej: "Salón" → "Sala de estar")
+- [x] **Paso 2:** Verificar en los logs que se detecta el cambio de nombre
+- [x] **Resultado esperado:** El nombre se actualiza, el `area_id` permanece igual
 
 ---
 
@@ -452,7 +452,7 @@ Formato de cada test:
 | 3 | 5 | 5/5 |
 | 4 | 1 | 1/1 |
 | 5 | 4 | 0/4 |
-| 6 | 3 | 0/3 |
+| 6 | 3 | 3/3 |
 | 7 | 2 | 0/2 |
 | 8 | 3 | 0/3 |
 | 9 | 4 | 0/4 |
@@ -465,4 +465,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **49** | **19/49** |
+| **Total** | **49** | **22/49** |

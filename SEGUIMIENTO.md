@@ -10,7 +10,7 @@ Estado del desarrollo fase por fase.
 | 3 | Options Flow | ✅ Completado | — | Options Flow implementado: permite modificar áreas, puerto, dominios y exclusiones |
 | 4 | Modelo de datos | ✅ Completado | — | `models.py` con `AreaBridge` (area_id, name, port, entities). Identidad por `area_id`. |
 | 5 | Area Manager | ✅ Completado | — | `area_manager.py` con descubrimiento de áreas, detección de cambios y obtención de entidades |
-| 6 | Entity Filter | ⏳ Pendiente | — | |
+| 6 | Entity Filter | ✅ Completado | — | `entity_filter.py` con pipeline de filtrado (dominios, exclusiones, no soportados). Tests unitarios incluidos. |
 | 7 | Bridge Manager | ⏳ Pendiente | — | |
 | 8 | Persistencia de puertos | ⏳ Pendiente | — | |
 | 9 | Primer Bridge | ⏳ Pendiente | — | |
@@ -177,3 +177,31 @@ Implementado el AreaManager para descubrir y rastrear áreas de Home Assistant.
 
 **Validación:**
 - Ruff check + format limpios
+
+### 2026-08-23 — Fin Fase 6 (Entity Filter)
+
+Implementado el EntityFilter con pipeline de filtrado para entidades de HomeKit.
+
+**Archivos creados:**
+- `entity_filter.py` — Clase `EntityFilter` con pipeline:
+  1. `filter_entities()` — Aplica el pipeline completo
+  2. `_filter_by_domain()` — Filtra por dominios permitidos
+  3. `_filter_excluded()` — Excluye entidades específicas
+  4. `_filter_unsupported()` — Excluye dominios no soportados por HomeKit
+  5. `get_filtered_entities_for_area()` — Método de conveniencia para áreas
+
+- `tests/test_entity_filter.py` — Tests unitarios independientes:
+  - Test de filtrado por dominio
+  - Test de exclusión de entidades
+  - Test de dominios no soportados
+  - Test del pipeline completo
+  - Test de casos edge (vacío, todo excluido, etc.)
+
+**Diseño:**
+- Pipeline secuencial: área → dominios → exclusiones → no soportados
+- `UNSUPPORTED_DOMAINS` incluye dominios que no tienen representación en HomeKit
+- Integrado en `__init__.py` para filtrar entidades de cada área al cargar
+
+**Validación:**
+- Ruff check + format limpios
+- Tests unitarios creados (10 tests)
