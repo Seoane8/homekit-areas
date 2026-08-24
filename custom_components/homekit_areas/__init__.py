@@ -67,21 +67,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Initialize BridgeManager with PortManager
     bridge_manager = BridgeManager(hass, port_manager)
 
-    # Only cleanup and reset if port changed
-    if port_changed:
-        _LOGGER.info(
-            "Initial port changed from %d to %d, recreating all bridges",
-            port_manager._saved_initial_port,
-            initial_port,
-        )
-        await bridge_manager.cleanup_stale_bridges()
-        port_manager.reset_all_ports(initial_port)
-        await port_manager.async_save()
-    else:
-        # Port didn't change, just cleanup any orphaned bridges
-        # (bridges that exist but whose areas are no longer configured)
-        _LOGGER.debug("Initial port unchanged, preserving existing bridges")
-
     # Store in hass.data for access by other components
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
@@ -118,8 +103,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Get list of area_ids we should have bridges for
     configured_area_ids = {area.area_id for area in areas_to_process}
 
-    # Remove bridges for areas that are no longer configured
-    if not port_changed:
+    # Check if initial port changed
+    if port_changed:
+        _LOGGER.info(
+            "Initial port changed from %d to %d, will recreate bridges with new ports",
+            port_manager._saved_initial_port,
+            initial_port,
+        )
+        # Reset port mappings
+        port_manager.reset_all_ports(initial_port)
+        await port_manager.async_save()
+        # Remove all existing bridges for configured areas (they have old ports)
+        existing_bridges = bridge_manager.get_all_bridges()
+        for area_id in list(existing_bridges.keys()):
+            if area_id in configured_area_ids:
+                _LOGGER.info(
+                    "Removing bridge for area %s (port changed)",
+                    area_id,
+                )
+                await bridge_manager.remove_bridge(area_id)
+    else:
+        # Port didn't change, preserve existing bridges
+        _LOGGER.debug("Initial port unchanged, preserving existing bridges")
+        # Remove bridges for areas that are no longer configured
         existing_bridges = bridge_manager.get_all_bridges()
         for area_id in list(existing_bridges.keys()):
             if area_id not in configured_area_ids:

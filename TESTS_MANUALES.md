@@ -242,25 +242,25 @@ Formato de cada test:
 
 ### Test 8.1 — Asignación inicial de puertos
 
-- [ ] **Paso 1:** Configurar puerto inicial `21070`
-- [ ] **Paso 2:** Verificar en los logs que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
-- [ ] **Paso 3:** Verificar que el log muestra "Loaded X existing bridges from config entries"
-- [ ] **Resultado esperado:** Los puertos se asignan correctamente
+- [x] **Paso 1:** Configurar puerto inicial `21070`
+- [x] **Paso 2:** Verificar en los logs que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
+- [x] **Paso 3:** Verificar que el log muestra "Loaded X existing bridges from config entries"
+- [x] **Resultado esperado:** Los puertos se asignan correctamente
 
 ### Test 8.2 — Persistencia tras reinicio
 
-- [ ] **Paso 1:** Reiniciar Home Assistant
-- [ ] **Paso 2:** Verificar en los logs que los puertos se mantienen (no aparecen mensajes de "resetting all ports")
-- [ ] **Paso 3:** Verificar que los bridges existentes se preservan
-- [ ] **Resultado esperado:** Los puertos no cambian tras reiniciar, los bridges se mantienen
+- [x] **Paso 1:** Reiniciar Home Assistant
+- [x] **Paso 2:** Verificar en los logs que los puertos se mantienen (no aparecen mensajes de "resetting all ports")
+- [x] **Paso 3:** Verificar que los bridges existentes se preservan
+- [x] **Resultado esperado:** Los puertos no cambian tras reiniciar, los bridges se mantienen
 
 ### Test 8.3 — No reutilización de puertos liberados
 
-- [ ] **Paso 1:** Eliminar un área de la configuración (ej: Cocina, puerto 21071)
-- [ ] **Paso 2:** Reiniciar Home Assistant
-- [ ] **Paso 3:** Añadir otra área nueva a la configuración
-- [ ] **Paso 4:** Verificar que el puerto 21071 no se reasigna a la nueva área (debería recibir 21073 o siguiente)
-- [ ] **Resultado esperado:** El puerto liberado no se reutiliza en V1
+- [x] **Paso 1:** Eliminar un área de la configuración (ej: Cocina, puerto 21071)
+- [x] **Paso 2:** Reiniciar Home Assistant
+- [x] **Paso 3:** Añadir otra área nueva a la configuración
+- [x] **Paso 4:** Verificar que el puerto 21071 no se reasigna a la nueva área (debería recibir 21073 o siguiente)
+- [x] **Resultado esperado:** El puerto liberado no se reutiliza en V1
 
 ### Test 8.4 — Cambio de puerto inicial
 

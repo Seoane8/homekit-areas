@@ -7,6 +7,7 @@ HomeKit integration.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
@@ -122,9 +123,9 @@ class BridgeManager:
                 entry.data.get(CONF_NAME),
                 entry.entry_id,
             )
-            # First unload to stop the bridge
-            await self.hass.config_entries.async_unload(entry.entry_id)
-            # Then remove the entry
+            # Remove the entry (this handles unload internally)
+            # We use async_remove which will properly clean up the entry
+            # and cancel any pending tasks
             await self.hass.config_entries.async_remove(entry.entry_id)
 
         _LOGGER.info("Cleaned up %d stale bridges", len(entries_to_remove))
@@ -297,7 +298,15 @@ class BridgeManager:
 
         entry_id = self._bridge_registry[area_id]["entry_id"]
 
-        # Remove the entry
+        # First unload to stop the bridge and cancel pending tasks
+        _LOGGER.debug("Unloading bridge for area %s", area_id)
+        await self.hass.config_entries.async_unload(entry_id)
+
+        # Wait a bit for pending tasks to complete
+        await asyncio.sleep(0.5)
+
+        # Then remove the entry
+        _LOGGER.debug("Removing bridge entry for area %s", area_id)
         await self.hass.config_entries.async_remove(entry_id)
 
         # Clean up registry
