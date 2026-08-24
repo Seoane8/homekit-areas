@@ -51,6 +51,31 @@ class BridgeManager:
         # Mapping: area_id -> {entry_id, port}
         self._bridge_registry: dict[str, dict[str, Any]] = {}
 
+    async def cleanup_stale_bridges(self) -> None:
+        """Remove all HomeKit bridges created by this integration.
+
+        This cleans up ConfigEntry-s del dominio `homekit` que fueron creados
+        en intentos anteriores y que pueden estar ocupando puertos/nombres.
+        """
+        _LOGGER.info("Cleaning up stale HomeKit bridges...")
+        entries_to_remove = []
+
+        for entry in self.hass.config_entries.async_entries(HOMEKIT_DOMAIN):
+            # Check if this entry was created by us (name starts with "HomeKit ")
+            entry_name = entry.data.get(CONF_NAME, "")
+            if entry_name.startswith("HomeKit "):
+                entries_to_remove.append(entry)
+
+        for entry in entries_to_remove:
+            _LOGGER.info(
+                "Removing stale bridge: %s (entry_id=%s)",
+                entry.data.get(CONF_NAME),
+                entry.entry_id,
+            )
+            await self.hass.config_entries.async_remove(entry.entry_id)
+
+        _LOGGER.info("Cleaned up %d stale bridges", len(entries_to_remove))
+
     async def create_bridge(self, bridge: AreaBridge) -> None:
         """Create a HomeKit bridge for an area.
 

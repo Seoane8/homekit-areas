@@ -56,6 +56,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Initialize BridgeManager
     bridge_manager = BridgeManager(hass)
 
+    # Clean up any stale bridges from previous attempts
+    await bridge_manager.cleanup_stale_bridges()
+
     # Store in hass.data for access by other components
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
@@ -78,7 +81,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if areas:
         # Only create bridges for selected areas
         areas_to_process = [area for area in discovered_areas if area.area_id in areas]
-        _LOGGER.info("Creating bridges for %d selected areas", len(areas_to_process))
+        _LOGGER.info(
+            "Creating bridges for %d selected areas: %s",
+            len(areas_to_process),
+            areas,
+        )
     else:
         # Create bridges for all areas
         areas_to_process = discovered_areas
