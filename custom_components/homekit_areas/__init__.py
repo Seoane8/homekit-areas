@@ -174,12 +174,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a HomeKit Areas config entry."""
-    # Shutdown AreaManager
     if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
         data = hass.data[DOMAIN][entry.entry_id]
+
+        # Remove all bridges first
+        bridge_manager = data.get("bridge_manager")
+        if bridge_manager:
+            await bridge_manager.remove_all_bridges()
+
+        # Shutdown AreaManager
         area_manager = data.get("area_manager")
         if area_manager:
             await area_manager.async_shutdown()
+
         del hass.data[DOMAIN][entry.entry_id]
 
         # Clean up DOMAIN key if empty

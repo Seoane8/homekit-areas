@@ -347,3 +347,22 @@ class BridgeManager:
         """
         self._load_registry_from_entries()
         return self._bridge_registry.copy()
+
+    async def remove_all_bridges(self) -> None:
+        """Remove all HomeKit bridges managed by this integration.
+
+        This is called when the integration is being unloaded.
+        """
+        self._load_registry_from_entries()
+
+        if not self._bridge_registry:
+            _LOGGER.info("No bridges to remove")
+            return
+
+        _LOGGER.info("Removing %d bridges", len(self._bridge_registry))
+
+        # Remove all bridges
+        for area_id in list(self._bridge_registry.keys()):
+            await self.remove_bridge(area_id)
+
+        _LOGGER.info("All bridges removed")
