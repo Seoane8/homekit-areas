@@ -242,21 +242,22 @@ Formato de cada test:
 
 ### Test 8.1 — Asignación de puertos
 
-- [x] **Paso 1:** Configurar puerto inicial `21070`
-- [x] **Paso 2:** Verificar que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
-- [x] **Resultado esperado:** Los puertos se asignan correctamente
+- [ ] **Paso 1:** Configurar puerto inicial `21070`
+- [ ] **Paso 2:** Verificar en los logs que las áreas reciben puertos consecutivos (21070, 21071, 21072...)
+- [ ] **Resultado esperado:** Los puertos se asignan correctamente
 
 ### Test 8.2 — Persistencia tras reinicio
 
-- [x] **Paso 1:** Reiniciar Home Assistant
-- [x] **Paso 2:** Verificar que los puertos se mantienen
-- [x] **Resultado esperado:** Los puertos no cambian tras reiniciar
+- [ ] **Paso 1:** Reiniciar Home Assistant
+- [ ] **Paso 2:** Verificar en los logs que los puertos se mantienen
+- [ ] **Resultado esperado:** Los puertos no cambian tras reiniciar
 
 ### Test 8.3 — No reutilización de puertos liberados
 
-- [x] **Paso 1:** Eliminar un área (ej: Cocina, puerto 21071)
-- [x] **Paso 2:** Verificar que el puerto 21071 no se reasigna a otra área
-- [x] **Resultado esperado:** El puerto liberado no se reutiliza en V1
+- [ ] **Paso 1:** Eliminar un área de la configuración (ej: Cocina, puerto 21071)
+- [ ] **Paso 2:** Añadir otra área nueva
+- [ ] **Paso 3:** Verificar que el puerto 21071 no se reasigna a la nueva área
+- [ ] **Resultado esperado:** El puerto liberado no se reutiliza en V1
 
 ---
 
@@ -454,7 +455,7 @@ Formato de cada test:
 | 5 | 4 | 0/4 |
 | 6 | 3 | 3/3 |
 | 7 | 2 | 2/2 |
-| 8 | 3 | 3/3 |
+| 8 | 3 | 0/3 |
 | 9 | 4 | 0/4 |
 | 10 | 3 | 0/3 |
 | 11 | 1 | 0/1 |
@@ -465,4 +466,4 @@ Formato de cada test:
 | 16 | 1 | 0/1 |
 | 17 | 2 | 0/2 |
 | 18 | 3 | 0/3 |
-| **Total** | **49** | **27/49** |
+| **Total** | **49** | **24/49** |
